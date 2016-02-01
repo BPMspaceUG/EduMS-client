@@ -1,23 +1,41 @@
 Hi from boot.html
+
 <script  type="text/javascript">
+/*Das angular.module initialisiert Angular*/
 var app = angular.module('application', []);
+
+/*Ein controller wird für einen bestimmten Sinnabschnitt innerhalb von Angular definiert*/
 app.controller('topicCtrl', ['$scope','$http', function ($scope, $http) {
-	/*$http.get(/gettopic)*/
-  $scope.topics = [{topic:'SCRUM'},{topic:'ISO 27000'},{topic:'m'},{topic:'e'},{topic:'h'},{topic:'r'}];
+	//Der $http.get-service läd Ressourcen nach 	
+	allTopics=$http.get('/EduMS/api/index.php/partner1/abc/getTopics')
+	.then(function(response) {//wenn angeforderte Daten empfangen wurden...
+		//
+		$scope.topics = response.data.topiclist;
+
+		//HTML5 3.2.3.1: Das id-Attribut darf kein Leerzeichen enthalten deshalb wird der topic_name nach name_raw kopiert u. anschließend die Leerzeichen entfernt
+		for (var i = 0; i < $scope.topics.length; i++) {
+			$scope.topics[i].topic_name_raw = $scope.topics[i].topic_name;			
+			$scope.topics[i].topic_nr = i;			
+			$scope.topics[i].topic_name = $scope.topics[i].topic_name.replace(/\s+/g,'');//löscht alle Leerzeichen			
+		};
+		console.log('getTopics: '); console.log($scope.topics);
+	})
 }]);
+
 </script>
+
 <div class="container-fluid" >
 	<div class="row">
 		<!----header-->
 		<div class="col-md-12" id="header">
 			<div class="well well-lg well_darkgrey">
-				<img src="http://localhost:4040/EduMS-client/images/ihrLogo.png" alt="Ihr Logo"> header - für Organisationen die keine eigene webseite haben - statischer inhalt
+				<img src="/EduMS-client/images/ihrLogo.png" alt="Ihr Logo"> header - für Organisationen die keine eigene webseite haben - statischer inhalt
 			</div>
 		</div>
 	</div>
-		<div class="row">
+		<div class="row" ng-controller="topicCtrl">
 			<!----content & sidebar-->
-			<div class="col-md-9" id="container-content" ng-controller="topicCtrl">
+			<div class="col-md-9" id="container-content" >
 				<div class="tabbable" id="tabs-230047">
 					<ul class="nav nav-tabs well">
 						<li class="active">
@@ -25,10 +43,11 @@ app.controller('topicCtrl', ['$scope','$http', function ($scope, $http) {
 								<i class="fa fa-university"></i>
 							</a>
 						</li>
-						<li ng-repeat="t in topics">
-							<a href="#" data-toggle="tab" data-target="#panel-{{t.topic}},#panel-{{t.topic}}-sidebar">{{t.topic}}</a>
-						</li>
+
+						<li ng-repeat="t in topics"><a href="#" data-toggle="tab" data-target="#panel-{{t.topic_name}},#panel-{{t.topic_name}}-sidebar">{{t.topic_name_raw}}</a></li>
+
 						<li><a href="#" data-toggle="tab" data-target="#panel-topic_3,#panel-topic_3-sidebar">Topic 3</a></li>
+
 						<li class="pull-right"><a href="#" data-toggle="tab" data-target="#panel-sonstiges,#panel-sonstiges-sidebar">sonstiges</a>
 						</li>
 						<li class="pull-right"><a href="#" data-toggle="tab" data-target="#panel-standort,#panel-standort-sidebar">
@@ -37,17 +56,20 @@ app.controller('topicCtrl', ['$scope','$http', function ($scope, $http) {
 						<li class="pull-right"><a href="#" data-toggle="tab" data-target="#panel-preis,#panel-preis-sidebar">
 							<i class="fa fa-eur"></i> Preise</a>
 						</li>
-						</ul>
+					</ul>
+
 
 					<div class="tab-content">
+
 						<div class="tab-pane  active" id="panel-brand">
 							<div>
 								<img class="col-md-2 img-rounded img-responsive pull-left"
 									src="http://dummyimage.com/200x200/ababab/000.png&amp;text=ORGA+LOGO"
 									alt="" />
 							</div>
+
 							<div class="col-md-10 well well-lg">
-								<p class="text-danger">wird aus EduMS ausgelesn tabelle
+								<p class="text-danger">wird aus EduMS ausgelesen tabelle
 									brand</p>
 								<p>Beißn, Saubreiß, hosd mi, Geizgroogn, Apruiaff,
 									Klobürschdn, Pritschn, Duitaff, Schlawina, Schdinkadores</p>
@@ -61,126 +83,32 @@ app.controller('topicCtrl', ['$scope','$http', function ($scope, $http) {
 									hindafozziga, Bauernfünfa, Kirchalicht, Spinotfressa, Beißn</p>
 							</div>
 						</div>
-						<div class="tab-pane" id="panel-topic_1">
-							<div class="col-md-12 well well-lg">
-								<nav class="navbar navbar-default">
-								<div class="container-fluid">
-									<div>
-										<ul class="nav navbar-nav ">
-											<li><a href="#Ausbildungsschema">Ausbildungsschema</a></li>
-											<li><a href="#Topic_1_Schulung_Level_1">Schulung Level 1</a></li>
-											<li><a href="#Topic_1_Schulung_Level_2">Schulung Level 2</a></li>
-											<li><a href="#Topic_1_Schulung_Level_3">Schulung Level 3</a></li>
-											<li><a href="#Preis_prüfungsgebühr">Schulungspreis & Prüfungsgebühr</a></li>
-										</ul>
+
+						
+							<div ng-repeat="t in topics" class="tab-pane" id="panel-{{t.topic_name}}">
+								<div class="col-md-12 well well-lg">
+								<p>{{t.topic_name_raw}}</p>
+
+									<div id="section{{t.topic_nr}}">
+										{{t.topic_description}}
 									</div>
-								</div>
-								</nav>
-								<p class="text-danger">wird aus EduMS ausgelesn Topic &
-									course Brand brand</p>
-								<div id="Ausbildungsschema">
-									<h1>Ausbildungsschema TOPIC 1</h1>
-									<p>Drottl, Lätschnbebbi, hoid dei Babbn, oida Daggl</p>
-									<p>Junga Duttara, Bettbrunza, Himmi Herrgott Saggrament,
-										Schdehlratz, Beißzanga, Bauernschädl, Krampfhenna, Jungfa,
-										bsuffas Wagscheidl, Kirchalicht, Klaubauf, Mistviach!</p>
-									<p>Kirchalicht, elendiger, Gibskobf, Beitlschneida,
-										Chaotngschwerl, bsuffas Wagscheidl, Badwaschl, hoit’s Mei!</p>
-								</div>
-								<div id="Topic_1_Schulung_Level_1">
-									<h1>Topic 1 Schulung Level 1</h1>
-									<p>Drottl, Lätschnbebbi, hoid dei Babbn, oida Daggl,
-										Schleimscheißa, Hinderducker, Zwidawurzn, Aufschneida</p>
-									<p>Junga Duttara, Bettbrunza, Himmi Herrgott Saggrament</p>
-									<p>Kirchalicht, elendiger, Gibskobf, Beitlschneida,
-										Chaotngschwerl, bsuffas Wagscheidl, Badwaschl, hoit’s Mei,
-										Hodalumb, Dreeghamml, Bettwanzn, Radlfahra, Sau!</p>
-								</div>
-								<div id="Topic_1_Schulung_Level_2">
-									<h1>Topic 1 Schulung Level 2</h1>
-									<p>Drottl, Lätschnbebbi, hoid dei Babbn, oida Daggl</p>
-									<p>Junga Duttara, Bettbrunza, Himmi Herrgott Saggrament,
-										Schdehlratz, Beißzanga, Bauernschädl, Krampfhenna, Jungfa!</p>
-									<p>Kirchalicht, elendiger, Gibskobf, Beitlschneida,
-										Chaotngschwerl, bsuffas Wagscheidl, Badwaschl, hoit’s Mei,
-										Hodalumb, Dreeghamml, Bettwanzn, Radlfahra, Sau!</p>
-								</div>
-								<div id="Topic_1_Schulung_Level_3">
-									<h1>Topic 1 Schulung Level 3</h1>
-									<p>Drottl, Lätschnbebbi, hoid dei Babbn, oida Daggl,
-										Schleimscheißa, Hinderducker, Zwidawurzn, Aufschneida,
-										Aufgeiga, Hundsgribbe, Luada, Fechtbruada, Krippnmandl!</p>
-									<p>Junga Duttara, Bettbrunza, Himmi Herrgott Saggrament,
-										Schdehlratz, Beißzanga, Bauernschädl, Krampfhenna, Jungfa!</p>
-									<p>Kirchalicht, elendiger, Gibskobf, Beitlschneida!</p>
+
+									<nav class="navbar navbar-default">
+										<div class="container-fluid">
+											<div>
+												<ul class="nav navbar-nav">
+													<li><a href="#topic_{{t}}_course{{c}}"></a>ng-repeat="c in courses"</li>
+												</ul>
+											</div>
+										</div>
+									</nav>
 								</div>
 							</div>
-						</div>
-						<div class="tab-pane" id="panel-topic_2">
-							<div class="col-md-12 well well-lg">
-								<p class="text-danger">wird aus EduMS ausgelesn Topic &
-									course Brand brand</p>
-								<div id="section1">
-									<h1>Ausbildungsschema TOPIC 2</h1>
-									<p>Drottl, Lätschnbebbi, hoid dei Babbn, oida Daggl,
-										Schleimscheißa, Hinderducker, Zwidawurzn, Aufschneida,
-										Aufgeiga, Hundsgribbe, Luada, Fechtbruada, Krippnmandl!</p>
-								</div>
-								<div id="section2">
-									<h1>Topic 2 Schulung Level 1</h1>
-									<p>Drottl, Lätschnbebbi, hoid dei Babbn, oida Daggl!</p>
-									<p>Junga Duttara, Bettbrunza, Himmi Herrgott Saggrament!</p>
-									<p>Kirchalicht, elendiger, Gibskobf, Beitlschneida!</p>
-								</div>
-								<div id="section3">
-									<h1>Topic 2 Schulung Level 2</h1>
-									<p>Drottl, Lätschnbebbi, hoid dei Babbn, oida Daggl,
-										Schleimscheißa, Hinderducker, Zwidawurzn, Aufschneida!</p>
-									<p>Junga Duttara, Bettbrunza, Himmi Herrgott Saggrament,
-										Schdehlratz, Beißzanga, Bauernschädl, Krampfhenna, Jungfa!</p>									
-								</div>
-								<div id="section4">
-									<h1>Topic 2 Schulung Level 3</h1>
-									<p>Drottl, Lätschnbebbi, hoid dei Babbn, oida Daggl!</p>
-								</div>
-							</div>
-						</div>
-						<div class="tab-pane" id="panel-topic_3">
-							<div class="col-md-12 well well-lg">
-								<p class="text-danger">wird aus EduMS ausgelesn Topic &
-									course Brand brand</p>
-								<div id="section1">
-									<h1>Ausbildungsschema TOPIC 3</h1>
-									<p>Drottl, Lätschnbebbi, hoid dei Babbn, oida Daggl!</p>
-								</div>
-								<div id="section2">
-									<h1>Topic 3 Schulung Level 1</h1>
-									<p>Drottl, Lätschnbebbi, hoid dei Babbn, oida Daggl,
-										Schleimscheißa, Hinderducker, Zwidawurzn, Aufschneida,
-										Aufgeiga, Hundsgribbe, Luada, Fechtbruada, Krippnmandl,
-										Heislschlaicha, Schwammal, Krippnmandl, Dreeghamml, Pimpanell!</p>
-								</div>
-								<div id="section3">
-									<h1>Topic 3 Schulung Level 2</h1>
-									<p>Drottl, Lätschnbebbi, hoid dei Babbn, oida Daggl!</p>
-								</div>
-								<div id="section4">
-									<h1>Topic 3 Schulung Level 3</h1>
-									<p>Drottl, Lätschnbebbi, hoid dei Babbn, oida Daggl,
-										Schleimscheißa, Hinderducker, Zwidawurzn, Aufschneida,
-										Aufgeiga, Hundsgribbe, Luada, Fechtbruada, Krippnmandl,
-										Heislschlaicha, Schwammal, Krippnmandl, Dreeghamml, Pimpanell,
-										Frichdal, Spinotfressa, Wurznsepp, hoit’s Mei, Eisackla,
-										dreckata Drek, Ecknsteha, Spinotfressa, ja, wo samma denn,
-										misdiga Lausbua, gwampate Sau, Pritschn, Drottl, Oasch,
-										klebrigs Biaschal, damischa Depp, gscheada Saubreiß, Lausbua,
-										Dreeghamml, schau, dass di schleichst, Gscheidal, Hubbfa,
-										Hopfastanga, Presssack, Zeeefix, Schuibuamtratza, Hopfastanga,
-										Finessenseppal, Himmeheagodna, Grantlhuaba, hoit’s Mei,
-										Heislmo!</p>
-								</div>
-							</div>
-						</div>
+						
+
+
+
+
 						<div class="tab-pane" id="panel-preis">
 							<p>Tabelle der Einzelpreise ud Pakete</p>
 						</div>
