@@ -1,29 +1,4 @@
 Hi from boot.html
-
-<script  type="text/javascript">
-/*Das angular.module initialisiert Angular*/
-var app = angular.module('application', []);
-
-/*Ein controller wird für einen bestimmten Sinnabschnitt innerhalb von Angular definiert*/
-app.controller('topicCtrl', ['$scope','$http', function ($scope, $http) {
-	//Der $http.get-service läd Ressourcen nach 	
-	allTopics=$http.get('/EduMS/api/index.php/partner1/abc/getTopics')
-	.then(function(response) {//wenn angeforderte Daten empfangen wurden...
-		//
-		$scope.topics = response.data.topiclist;
-
-		//HTML5 3.2.3.1: Das id-Attribut darf kein Leerzeichen enthalten deshalb wird der topic_name nach name_raw kopiert u. anschließend die Leerzeichen entfernt
-		for (var i = 0; i < $scope.topics.length; i++) {
-			$scope.topics[i].topic_name_raw = $scope.topics[i].topic_name;			
-			$scope.topics[i].topic_nr = i;			
-			$scope.topics[i].topic_name = $scope.topics[i].topic_name.replace(/\s+/g,'');//löscht alle Leerzeichen			
-		};
-		console.log('getTopics: '); console.log($scope.topics);
-	})
-}]);
-
-</script>
-
 <div class="container-fluid" >
 	<div class="row">
 		<!----header-->
@@ -44,7 +19,7 @@ app.controller('topicCtrl', ['$scope','$http', function ($scope, $http) {
 							</a>
 						</li>
 
-						<li ng-repeat="t in topics"><a href="#" data-toggle="tab" data-target="#panel-{{t.topic_name}},#panel-{{t.topic_name}}-sidebar">{{t.topic_name_raw}}</a></li>
+						<li ng-repeat="t in topics"><a href="#" data-toggle="tab" data-target="#panel-{{t.topic_name}},#panel-{{t.topic_name}}-sidebar">{{$index +1}}{{t.topic_name_raw}}</a></li>
 
 						<li><a href="#" data-toggle="tab" data-target="#panel-topic_3,#panel-topic_3-sidebar">Topic 3</a></li>
 
