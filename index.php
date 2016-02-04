@@ -1,17 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: cwalonka
- * Date: 03.10.15
- * Time: 18:03
- */
+/**User: cwalonka, cneuland*/
 require_once 'config.inc.php';
 
-$baseURL = "";//Pfad zum Script mit / am Ende
-$css = file_get_contents($config['srv']['addr'].'/'.$config['auth']['login'].'/'.$config['auth']['token'].'/css');
-$response = '';
-$contentid = '';
-$footer = '';
+$baseURL = $config['srv']['addr'].'/'.$config['auth']['login'].'/'.$config['auth']['token'];
+$scripte = file_get_contents($baseURL.'/scripte');
+$css = file_get_contents($baseURL.'/css');
+$cssSheets = file_get_contents($baseURL.'/cssSheets');
+
+$topnav='';$sidebar='';$response = '';$contentid = '';$footer = '';
 
 if(array_key_exists('contentid',$_GET)){
     intval($_GET['contentid'])>0 ? $contentid="/".intval($_GET['contentid']) : $contentid="";
@@ -25,26 +21,27 @@ if(array_key_exists('navdest',$_GET)){
 $responseurl = "";
 switch ($navigationDestiny){
     // $config['srv']['addr'] = 'http://localhost:4040/EduMS/api/index.php';
+
     case 'packages':
-        $responseurl = $config['srv']['addr'].'/'.$config['auth']['login'].'/'.$config['auth']['token'].'/package'.$contentid;
+        $responseurl = $baseURL.'/package'.$contentid;
         break;
     case 'locations':
-        $responseurl = $config['srv']['addr'].'/'.$config['auth']['login'].'/'.$config['auth']['token'].'/location'.$contentid;
+        $responseurl = $baseURL.'/location'.$contentid;
         break;
     case 'topics':
-        $responseurl = $config['srv']['addr'].'/'.$config['auth']['login'].'/'.$config['auth']['token'].'/topics'.$contentid;
+        $responseurl = $baseURL.'/topics'.$contentid;
         break;
     case 'signup':
-        $responseurl = $config['srv']['addr'].'/'.$config['auth']['login'].'/'.$config['auth']['token'].'/signup';
+        $responseurl = $baseURL.'/signup';
         break;
     case 'boot':
-        $responseurl = $config['srv']['addr'].'/'.$config['auth']['login'].'/'.$config['auth']['token'].'/boot';
+        $responseurl = $baseURL.'/boot';
         break;
     case 'monitor':
-        $responseurl = $config['srv']['addr'].'/'.$config['auth']['login'].'/'.$config['auth']['token'].'/monitor';
+        $responseurl = $baseURL.'/monitor';
         break;
     default:
-        $responseurl = $config['srv']['addr'].'/'.$config['auth']['login'].'/'.$config['auth']['token'].'/';
+        $responseurl = $baseURL.'/';
 }
 
 $response = file_get_contents($responseurl);
@@ -75,6 +72,7 @@ switch ($navigationDestiny){
 
     case 'boot':
     $content = $navigationDestiny . '|'; 
+    $content .= file_get_contents('./controllers/topicCtrl.js');
     $content .= file_get_contents('boot.html');
     break;
 
@@ -163,8 +161,6 @@ EOT;
                 $packageDiscount = $key['package_discount'];
                 $packageDescription = $key['package_description'];
 
-
-
                 $content .= <<<EOT
             <p>$packageName<br>
             $packagePrice<br>
@@ -177,9 +173,6 @@ EOT;
 
         break;
 
-
-
-
     default:
     $response = json_decode($response, true);
     ob_start();
@@ -189,10 +182,11 @@ EOT;
 
 
 //var_dump($response);
-if(array_key_exists('content',$response)){
+
+if (isset($response['content'])) {
     $content = "";
     foreach($response['content'] as $key){
-        $content .= $key['text'];
+       $content .= $key['text'];
     }
 }
 
@@ -253,117 +247,22 @@ function getFooter($response,$baseURL){
     }
     return $result;
 }
-$topnav = getTopNav($response,$baseURL);
-$sidebar = getSidebar($response,$baseURL);
-$footer = $footer==''?getFooter($response,$baseURL):$footer;
+if (isset($response['topnav'])) {
+    $topnav = getTopNav($response,$baseURL);
+    $sidebar = getSidebar($response,$baseURL);
+    $footer = $footer==''?getFooter($response,$baseURL):$footer;
+}
 
+
+//Konstruktion der Ausgabepage
 echo <<<EOF
 <!DOCTYPE html>
 <html lang="de" ng-app='application'>
 <head>
-<script type="text/javascript"  src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-<script src="https://code.angularjs.org/1.4.9/angular.js"></script>
-
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <style type="text/css">
-        <!--
-        $css
-        -->
-    </style>
-
-
-<style type="text/css">
-.well_darkgrey {
-    opacity: 0.9; /* opacity [0-1] */
-    -moz-opacity: 0.9; /* opacity [0-1] */
-    -webkit-opacity: 0.9; /* opacity [0-1] */
-    background: #989898;
-}
-
-.90_percent {
-    max-width: 90%;
-}
-
-.modal {
-    position: fixed;
-    top: 3%;
-    right: auto;
-    bottom: 0;
-    left: 5%;
-    overflow: hidden;
-}
-
-.modal-dialog {
-    display: inline-block;
-    position: fixed;
-    margin: 0;
-    width: 90%;
-    height: 90%;
-    padding: 0;
-}
-
-.modal-content {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    border-radius: 0;
-    box-shadow: none;
-}
-
-.modal-header {
-    text-align: center;
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    height: 50px;
-    padding: 10px;
-    border: 0;
-}
-
-.modal-title {
-    font-size: 2em;
-    line-height: 30px;
-}
-
-.modal-body {
-    position: absolute;
-    top: 50px;
-    bottom: 60px;
-    width: 90%;
-    overflow: auto;
-}
-
-.modal-footer {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 60px;
-    padding: 10px;
-}
-
-table {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.btn-sucsess-outline {
-    background: #FFFFFF;
-    border-color: #5CB85C;
-    border-style: solid;
-    border-width: 2px;
-}
-
-body {
-    position: relative;
-}
-</style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">    
+    $scripte
+    $cssSheets
+    <style type="text/css"> $css </style>
 </head>
 <body>
     <div id="kopfbereich">
@@ -389,7 +288,4 @@ body {
 </body>
 </html>
 EOF;
-
-
-
 ?>
