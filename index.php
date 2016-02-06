@@ -1,11 +1,20 @@
 <?php
 /**User: cwalonka, cneuland*/
 require_once 'config.inc.php';
+require_once '../EduMS/custom/scripte.html';//file_get_contents($baseURL.'/js');
+require_once '../EduMS/custom/cssSheets.html';//file_get_contents($baseURL.'/js');
+require_once '../EduMS/custom/3.3.6 bootstrap.min.css';//file_get_contents($baseURL.'/js');
+require_once 'controllers/initAppAndCredents.js';//file_get_contents($baseURL.'/js');
+
+//include '../EduMS/custom/font-awesome-4.5.0/css/font-awesome.min.css';//file_get_contents($baseURL.'/js');
+//$css = file_get_contents($baseURL.'/css');
 
 $baseURL = $config['srv']['addr'].'/'.$config['auth']['login'].'/'.$config['auth']['token'];
-$scripte = file_get_contents($baseURL.'/scripte');
-$css = file_get_contents($baseURL.'/css');
-$cssSheets = file_get_contents($baseURL.'/cssSheets');
+//$cssSheets = file_get_contents($baseURL.'/cssSheets');
+//$bootstrap = file_get_contents($baseURL.'/bootstrap');
+//$bootstrapFontAwesome = file_get_contents($baseURL.'/bootstrapFontAwesome');
+
+
 
 $topnav='';$sidebar='';$response = '';$contentid = '';$footer = '';
 
@@ -72,7 +81,19 @@ switch ($navigationDestiny){
 
     case 'boot':
     $content = $navigationDestiny . '|'; 
-    $content .= file_get_contents('./controllers/topicCtrl.js');
+    include './controllers/topicCtrl.js';
+    include './controllers/courseCtrl.js';
+    include './controllers/brandCtrl.js';
+    include './controllers/TopicCtrl.js';
+    include './controllers/brandTopicCtrl.js';
+    include './controllers/eventCtrl.js';
+    include './controllers/locationCtrl.js';
+    include './controllers/organizationCtrl.js';
+    include './controllers/statusEventCtrl.js';
+    include './controllers/statusEventGuaranteeCtrl.js';
+    include './controllers/statusTrainerCtrl.js';
+    include './controllers/trainerEventAssighnmentCtrl.js';
+    include './controllers/brandLocationCtrl.js';
     $content .= file_get_contents('boot.html');
     break;
 
@@ -259,10 +280,9 @@ echo <<<EOF
 <!DOCTYPE html>
 <html lang="de" ng-app='application'>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">    
-    $scripte
-    $cssSheets
-    <style type="text/css"> $css </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">     
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!--link rel="stylesheet" type="text/css" href="../EduMS/custom/font-awesome-4.5.0/css/font-awesome.min.css"-->    
 </head>
 <body>
     <div id="kopfbereich">
