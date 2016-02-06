@@ -8,6 +8,11 @@ Hi from boot.html
 			</div>
 		</div>
 	</div>
+
+
+    <div class="row" ng-controller="trainerEventAssignmentCtrl"></div>
+    <!--div class="row" ng-controller="brandLocationCtrl"></div-->
+
 		<div class="row" ng-controller="topicCtrl">
 			<!----content & sidebar-->
 			<div class="col-md-9" id="container-content" >
@@ -19,7 +24,7 @@ Hi from boot.html
 							</a>
 						</li>
 
-						<li ng-repeat="t in topics"><a href="#" data-toggle="tab" data-target="#panel-{{t.topic_name}},#panel-{{t.topic_name}}-sidebar">{{$index +1}}{{t.topic_name_raw}}</a></li>
+						<li ng-repeat="t in topics"><a href="#" data-toggle="tab" data-target="#panel-{{t.topic_name}},#panel-{{t.topic_name}}-sidebar">{{t.topic_name_raw}}</a></li>
 
 						<li><a href="#" data-toggle="tab" data-target="#panel-topic_3,#panel-topic_3-sidebar">Topic 3</a></li>
 
@@ -165,9 +170,44 @@ Hi from boot.html
 									<i class="fa fa-calendar-check-o"></i> Aktuelle Termine
 								</h3>
 								<p>die nächsten 5 Kurse</p>
-								<table
-									class="table text-left table-striped table-hover table-condensed ">
+								<table class="table text-left table-striped table-hover table-condensed">
 									<tbody>
+
+
+
+										<tr ng-repeat="to in topics">
+											<table>
+												<tbody>
+													<tr>
+														<td>
+															<button type="button" class="btn btn-success btn-block">
+														</td>
+														<td class="lead">
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<span>{{to.topic_name_raw}}</span>
+														</td>
+														<td class="text-center">
+															<span class="fa-stack"> 
+																<i class="fa fa-circle fa-stack-2x"></i> 
+																<i class="fa fa-info fa-stack-1x fa-inverse"></i>
+															</span> 
+															<span class="fa-stack"> 
+																<i class="fa fa-circle fa-stack-2x"></i> 
+																<i class="fa fa-cart-plus fa-stack-1x fa-inverse"></i>
+															</span>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</tr>
+										
+
+
+
+
 										<tr>
 											<td>
 												<button type="button" class="btn btn-success btn-block">
@@ -258,6 +298,10 @@ Hi from boot.html
 													class="fa fa-cart-plus fa-stack-1x fa-inverse"></i>
 											</span></td>
 										</tr>
+
+
+
+
 									</tbody>
 								</table>
 								<div class="alert alert-info">
@@ -478,6 +522,18 @@ Hi from boot.html
 			</div>
 		</div>
 	</div>
+
+	<!-- Definition sämtlicher DB-View-Controller -->
+	<!--div class="row" ng-controller="courseCtrl"></div-->
+	<!--div class="row" ng-controller="brandCtrl"></div-->
+	<!--div class="row" ng-controller="brandLocationCtrl"></div-->
+	<!--div class="row" ng-controller="brandTopicCtrl"></div-->
+	<!--div class="row" ng-controller="eventCtrl"></div-->
+	<!--div class="row" ng-controller="locationCtrl"></div-->
+	<!--div class="row" ng-controller="organizationCtrl"></div-->
+	<!--div class="row" ng-controller="statusEventCtrl"></div-->
+	<!--div class="row" ng-controller="statusEventGuaranteeCtrl"></div-->
+	<!--div class="row" ng-controller="statusTrainerCtrl"></div-->
 
 
 
