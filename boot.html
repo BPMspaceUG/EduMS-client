@@ -10,12 +10,23 @@ Hi from boot.html
 	</div>
 
 
-    <div class="row" ng-controller="trainerEventAssignmentCtrl"></div>
-    <!--div class="row" ng-controller="brandLocationCtrl"></div-->
+	<!-- Definition sämtlicher DB-View-Controller -->
+	<!--div class="row" ng-controller="courseCtrl"></div-->
+	<!--div class="row" ng-controller="brandCtrl"></div-->
+	<!--div class="row" ng-controller="brandLocationCtrl"></div-->
+	<!--div class="row" ng-controller="brandTopicCtrl"></div-->
+	<!--div class="row" ng-controller="brandLocationCtrl"></div-->
+	<!--div class="row" ng-controller="eventCtrl"></div-->
+	<!--div class="row" ng-controller="locationCtrl"></div-->
+	<!--div class="row" ng-controller="organizationCtrl"></div-->
+	<!--div class="row" ng-controller="statusEventCtrl"></div-->
+	<!--div class="row" ng-controller="statusEventGuaranteeCtrl"></div-->
+	<!--div class="row" ng-controller="statusTrainerCtrl"></div-->    
+    <!--div class="row" ng-controller="trainerEventAssignmentCtrl"></div-->
 
-		<div class="row" ng-controller="topicCtrl">
+		<div class="row" ng-controller="navCtrl">
 			<!----content & sidebar-->
-			<div class="col-md-9" id="container-content" >
+			<div class="col-md-8" id="container-content" >
 				<div class="tabbable" id="tabs-230047">
 					<ul class="nav nav-tabs well">
 						<li class="active">
@@ -24,77 +35,62 @@ Hi from boot.html
 							</a>
 						</li>
 
-						<li ng-repeat="t in topics"><a href="#" data-toggle="tab" data-target="#panel-{{t.topic_name}},#panel-{{t.topic_name}}-sidebar">{{t.topic_name_raw}}</a></li>
-
-						<li><a href="#" data-toggle="tab" data-target="#panel-topic_3,#panel-topic_3-sidebar">Topic 3</a></li>
-
-						<li class="pull-right"><a href="#" data-toggle="tab" data-target="#panel-sonstiges,#panel-sonstiges-sidebar">sonstiges</a>
+						<li ng-repeat="t in topics">
+							<a href="#" data-toggle="tab" data-target="#panel-{{t.topic_name}},#panel-{{t.topic_name}}-sidebar">{{t.topic_name_raw}}</a>
 						</li>
-						<li class="pull-right"><a href="#" data-toggle="tab" data-target="#panel-standort,#panel-standort-sidebar">
-							<i class="fa fa-location-arrow"></i> Standorte</a>
+						<li class="pull-right">
+							<a href="#" data-toggle="tab" data-target="#panel-sonstiges,#panel-sonstiges-sidebar">sonstiges</a>
 						</li>
-						<li class="pull-right"><a href="#" data-toggle="tab" data-target="#panel-preis,#panel-preis-sidebar">
-							<i class="fa fa-eur"></i> Preise</a>
+						<li class="pull-right">
+							<a href="#" data-toggle="tab" data-target="#panel-standort,#panel-standort-sidebar"><i class="fa fa-location-arrow"></i> Standorte</a>
+						</li>
+						<li class="pull-right">
+							<a href="#" data-toggle="tab" data-target="#panel-preis,#panel-preis-sidebar"><i class="fa fa-eur"></i> Preise</a>
 						</li>
 					</ul>
 
 
-					<div class="tab-content">
-
-						<div class="tab-pane  active" id="panel-brand">
-							<div>
-								<img class="col-md-2 img-rounded img-responsive pull-left"
-									src="http://dummyimage.com/200x200/ababab/000.png&amp;text=ORGA+LOGO"
-									alt="" />
-							</div>
-
-							<div class="col-md-10 well well-lg">
-								<p class="text-danger">wird aus EduMS ausgelesen tabelle
-									brand</p>
-								<p>Beißn, Saubreiß, hosd mi, Geizgroogn, Apruiaff,
-									Klobürschdn, Pritschn, Duitaff, Schlawina, Schdinkadores</p>
-								<p>Drottl, Lätschnbebbi, hoid dei Babbn, oida Daggl,
-									Schleimscheißa, Hinderducker, Zwidawurzn, Aufschneida,
-									Aufgeiga, Hundsgribbe, Luada, Fechtbruada, Krippnmandl</p>
-								<p>Junga Duttara, Bettbrunza, Himmi Herrgott Saggrament</p>
-								<p>Kirchalicht, elendiger, Gibskobf, Beitlschneida,
-									Chaotngschwerl, bsuffas Wagscheidl, Badwaschl, hoit’s Mei,
-									Hodalumb, Dreeghamml, Bettwanzn, Radlfahra, Sau, Himmeheagodna,
-									hindafozziga, Bauernfünfa, Kirchalicht, Spinotfressa, Beißn</p>
+					<div class="tab-content">						
+						<div ng-repeat="t in topics" class="tab-pane" id="panel-{{t.topic_name}}">
+							<div class="col-md-12 well well-lg">
+							<p>{{t.topic_name_raw}}</p>
+								<div id="section{{t.topic_nr}}">
+									{{t.topic_description}}
+								</div>
+								<nav class="navbar navbar-default">
+									<div class="container-fluid">
+										<div>
+											<ul class="nav navbar-nav">
+												<li><a href="#topic_{{t}}_course{{c}}"></a>ng-repeat="c in courses"</li>
+											</ul>
+										</div>
+									</div>
+								</nav>
 							</div>
 						</div>
-
 						
-							<div ng-repeat="t in topics" class="tab-pane" id="panel-{{t.topic_name}}">
-								<div class="col-md-12 well well-lg">
-								<p>{{t.topic_name_raw}}</p>
-
-									<div id="section{{t.topic_nr}}">
-										{{t.topic_description}}
-									</div>
-
-									<nav class="navbar navbar-default">
-										<div class="container-fluid">
-											<div>
-												<ul class="nav navbar-nav">
-													<li><a href="#topic_{{t}}_course{{c}}"></a>ng-repeat="c in courses"</li>
-												</ul>
-											</div>
-										</div>
-									</nav>
-								</div>
-							</div>
-						
-
-
-
-
 						<div class="tab-pane" id="panel-preis">
 							<p>Tabelle der Einzelpreise ud Pakete</p>
+							<table class="table">
+								<tbody>
+									<tr ng-repeat="c in courses">
+										<td><h3><button type="button" class="btn btn-info">Nr({{$index +1}}) Name: {{c.course_name}}</button></h3></td><td><span class="label label-success">Price: {{c.course_price}}</span></td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
+
 						<div class="tab-pane" id="panel-standort">
 							<p>Standortbeschreibung aus EduMS und dazugehörige Termine</p>
+							<table class="table">
+								<tbody>
+									<tr ng-repeat="l in location">
+										<td>- {{l.location_name}} </td><td> Description: {{l.location_description}}</td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
+
 						<div class="tab-pane" id="panel-sonstiges">
 							<div class="panel-group" id="panel-493447">
 								<div class="panel panel-default">
@@ -106,8 +102,7 @@ Hi from boot.html
 									<div id="panel-element-9675257" class="panel-collapse collapse">
 										<div class="panel-body">
 											<div class="container-fluid">
-												<div class="row">Hier werden die SCHULUNGS-AGB aus
-													EduMS zugeladen</div>
+												<div class="row">{{DB-SchulungsAGB}}</div>
 											</div>
 										</div>
 									</div>
@@ -156,13 +151,35 @@ Hi from boot.html
 					</div>
 				</div>
 			</div>
-			<div class="col-md-3 text-center" id="sidebar">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<div class="col-md-4 text-center" id="sidebar">
 				<div>
-					<a id="modal-89910" href="#modal-container-89910" role="button"
-						class="btn btn-warning btn-block" data-toggle="modal"><button
-							type="button" class="btn btn-warning btn-block">
+
+					<a id="modal-89910" href="#modal-container-89910" role="button" class="btn btn-warning btn-block" data-toggle="modal">
+						<button type="button" class="btn btn-warning btn-block">
 							<i class="fa fa-arrow-circle-right"></i> Termine &amp; Anmeldung
-						</button></a>
+						</button>
+					</a>
+
 					<div class="tabbable" id="tabs-230047">
 						<div class="tab-content">
 							<div class="tab-pane active" id="panel-brand-sidebar">
@@ -170,145 +187,74 @@ Hi from boot.html
 									<i class="fa fa-calendar-check-o"></i> Aktuelle Termine
 								</h3>
 								<p>die nächsten 5 Kurse</p>
-								<table class="table text-left table-striped table-hover table-condensed">
-									<tbody>
+								<table class="table text-left table-striped table-condensed">
+									<tbody >
 
+      									<table  ng-repeat="e in nextEvents"  width="100%">
+        									<tr>
+        										<h3>													
+        											<td width="70%" ><hr><p class="lead">{{e.course_name}} {{e.start_date}}</p></td>
+        											<td width="30%">													
+														<span class="fa-stack"> 
+															<i class="fa fa-circle fa-stack-2x"></i> 
+															<i class="fa fa-info fa-stack-1x fa-inverse"></i>
+														</span> 
+														<span class="fa-stack"> 
+															<i class="fa fa-circle fa-stack-2x"></i> 
+															<i class="fa fa-cart-plus fa-stack-1x fa-inverse"></i>
+														</span>
+													</td>
+        										</h3>
+											</tr>
+											<tr>
+												<td>
+													<button type="button" class="btn btn-success btn-block">
+														<span> Termingarantie: {{e.eventguaranteestatus}}</span>
+												</td>
+											</tr>
+  										</table>
 
-
-										<tr ng-repeat="to in topics">
-											<table>
-												<tbody>
-													<tr>
-														<td>
-															<button type="button" class="btn btn-success btn-block">
-														</td>
-														<td class="lead">
-														</td>
-													</tr>
-													<tr>
-														<td>
-															<span>{{to.topic_name_raw}}</span>
-														</td>
-														<td class="text-center">
-															<span class="fa-stack"> 
-																<i class="fa fa-circle fa-stack-2x"></i> 
-																<i class="fa fa-info fa-stack-1x fa-inverse"></i>
-															</span> 
-															<span class="fa-stack"> 
-																<i class="fa fa-circle fa-stack-2x"></i> 
-																<i class="fa fa-cart-plus fa-stack-1x fa-inverse"></i>
-															</span>
-														</td>
-													</tr>
-												</tbody>
-											</table>
-										</tr>
-										
-
-
-
-
-										<tr>
-											<td>
-												<button type="button" class="btn btn-success btn-block">
-													Termingarantie</span>
-											</td>
-											<td class="lead">xx.yy.2016</td>
-										</tr>
-										<tr>
-											<td><span>TOPIC 1 Class 2</span></td>
-											<td class="text-center"><span class="fa-stack"> <i
-													class="fa fa-circle fa-stack-2x"></i> <i
-													class="fa fa-info fa-stack-1x fa-inverse"></i>
-											</span> <span class="fa-stack"> <i
-													class="fa fa-circle fa-stack-2x"></i> <i
-													class="fa fa-cart-plus fa-stack-1x fa-inverse"></i>
-											</span></td>
-										</tr>
+									
 										<tr>
 											<td>
 												<button type="button"
 													class="btn btn-succes btn-block btn-sucsess-outline">
-													<i class="text-danger"><strong>nur noch 1
-															Platz</strong></i>
+													<i class="text-danger"><strong>nur noch 1 Platz</strong></i>
 												</button>
-
 											</td>
-											<td class="lead">xx.yy.2016</td>
 										</tr>
-										<tr>
-											<td><span>TOPIC 2 Class 2</span></td>
-											<td class="text-center"><span class="fa-stack"> <i
-													class="fa fa-circle fa-stack-2x"></i> <i
-													class="fa fa-info fa-stack-1x fa-inverse"></i>
-											</span> <span class="fa-stack"> <i
-													class="fa fa-circle fa-stack-2x"></i> <i
-													class="fa fa-cart-plus fa-stack-1x fa-inverse"></i>
-											</span></td>
-										</tr>
+
 										<tr>
 											<td>
-												<button type="button" class="btn btn-danger btn-block">WARTELISTE</button>
+												<button type="button" class="btn btn-danger btn-block">Warteliste</button>
 											</td>
-											<td class="lead">xx.yy.2016</td>
 										</tr>
-										<tr>
-											<td><span>TOPIC 1 Class 3</span></td>
-											<td class="text-center"><span class="fa-stack"> <i
-													class="fa fa-circle fa-stack-2x"></i> <i
-													class="fa fa-info fa-stack-1x fa-inverse"></i>
-											</span> <span class="fa-stack"> <i
-													class="fa fa-circle fa-stack-2x"></i> <i
-													class="fa fa-cart-plus fa-stack-1x fa-inverse"></i>
-											</span></td>
-										</tr>
+	
 										<tr>
 											<td>
-												<button type="button"
-													class="btn btn-succes btn-block btn-sucsess-outline">
-													<i class="text-warning"><strong>nur noch 3
-															Plätze</strong></i>
+												<button type="button" class="btn btn-succes btn-block btn-sucsess-outline">
+													<i class="text-warning"><strong>nur noch 3 Plätze</strong></i>
 											</td>
-											<td class="lead">xx.yy.2016</td>
 										</tr>
 										<tr>
-											<td><span>TOPIC 3 Class 1</span></td>
-											<td class="text-center"><span class="fa-stack"> <i
-													class="fa fa-circle fa-stack-2x"></i> <i
-													class="fa fa-info fa-stack-1x fa-inverse"></i>
-											</span> <span class="fa-stack"> <i
-													class="fa fa-circle fa-stack-2x"></i> <i
-													class="fa fa-cart-plus fa-stack-1x fa-inverse"></i>
-											</span></td>
-										</tr>
 										<tr>
 											<td>
-												<button type="button" class="btn btn-primary btn-block">TERMIN</button>
+												<button type="button" class="btn btn-primary btn-block">Termin</button>
 											</td>
-											<td class="lead">xx.yy.2016</td>
-
 										</tr>
 										<tr>
-											<td><span>TOPIC 2 Class 3</span></td>
-											<td class="text-center"><span class="fa-stack"> <i
-													class="fa fa-circle fa-stack-2x"></i> <i
-													class="fa fa-info fa-stack-1x fa-inverse"></i>
-											</span> <span class="fa-stack"> <i
-													class="fa fa-circle fa-stack-2x"></i> <i
-													class="fa fa-cart-plus fa-stack-1x fa-inverse"></i>
-											</span></td>
-										</tr>
-
-
-
-
 									</tbody>
 								</table>
+
+
+
 								<div class="alert alert-info">
 									<p>INFO - die nächsten 5 Termien aus ALLEN Schulungen aus
 										eduMS anzeiegn</p>
 								</div>
 							</div>
+
+
 							<div class="tab-pane" id="panel-topic_1-sidebar">
 
 								<div class="alert alert-info">
@@ -522,18 +468,4 @@ Hi from boot.html
 			</div>
 		</div>
 	</div>
-
-	<!-- Definition sämtlicher DB-View-Controller -->
-	<!--div class="row" ng-controller="courseCtrl"></div-->
-	<!--div class="row" ng-controller="brandCtrl"></div-->
-	<!--div class="row" ng-controller="brandLocationCtrl"></div-->
-	<!--div class="row" ng-controller="brandTopicCtrl"></div-->
-	<!--div class="row" ng-controller="eventCtrl"></div-->
-	<!--div class="row" ng-controller="locationCtrl"></div-->
-	<!--div class="row" ng-controller="organizationCtrl"></div-->
-	<!--div class="row" ng-controller="statusEventCtrl"></div-->
-	<!--div class="row" ng-controller="statusEventGuaranteeCtrl"></div-->
-	<!--div class="row" ng-controller="statusTrainerCtrl"></div-->
-
-
 
