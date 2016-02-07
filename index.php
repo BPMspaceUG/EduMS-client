@@ -94,6 +94,7 @@ switch ($navigationDestiny){
     include './controllers/statusTrainerCtrl.js';
     include './controllers/trainerEventAssighnmentCtrl.js';
     include './controllers/brandLocationCtrl.js';
+    include './controllers/navCtrl.js';
     $content .= file_get_contents('boot.html');
     break;
 
