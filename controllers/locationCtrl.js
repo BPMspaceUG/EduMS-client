@@ -1,6 +1,6 @@
 <script  type="text/javascript">
 app.controller('locationCtrl', ['$scope','$http', function ($scope, $http) {	
-	$http.get('/EduMS/api/index.php/'+bname+'/'+pw+'/getLocation')
+	$http.get('/EduMS/api/index.php/'+bname+'/'+pw+'/getAllLocations')
 	.then(function(response) {
 		$scope.location = response.data;
 		console.log('locations: '); console.log($scope.location);
