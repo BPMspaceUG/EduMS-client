@@ -364,30 +364,36 @@ Hi from boot.html
 									<thead>
 										<tr>
 											<th><i class="fa fa-cart-arrow-down fa-2x"></i></th>
-											<th><i class="fa-2x">Status</i></th>
-											<th><i class="fa-2x">Datum</i></th>
-											<th><i class="fa-2x">Schulungsname</i></th>
-											<th><i class="fa-2x">Schulungsort</i></th>
-											<th><i class="fa-2x">Trainer**</i></th>
-											<th><i class="fa-2x">Preis* </i></th>
+											<th><i class="fa-1x">Status</i></th>
+											<th><i class="fa-1x">Datum</i></th>
+											<th><i class="fa-1x">Schulungsname</i></th>
+											<th><i class="fa-1x">MaxTeilnehmer</i></th>
+											<th><i class="fa-1x">Reserviert</i></th>
+											<th><i class="fa-1x">Schulungsort</i></th>
+											<th><i class="fa-1x">Trainer**</i></th>
+											<th><i class="fa-1x">Preis* </i></th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr ng-repeat="e in nextEvents">
+										{{futureCourses.leftSeats[3861]}}
+										<tr ng-repeat="fc in futureCourses">
 											<td><i class="fa fa-square-o"></i></td>
 											<td>
-												<button type="button" class="btn btn-success btn-block">
-													TERMINGARANTIE
-												</button>
+												
+													<button type="button" class="btn btn-success btn-block">Termingarantie</button>
+												
 											</td>
-											<td>12.12.2015 - 13.12.2015</td>
-											<td>SCHULUNG 1</td>
-											<td>
-												ort<span></span> - strasse 1
-											</td>
-											<td>Vorname Nachname</td>
-											<td>790€</td>
+											<td>{{fc.start_date}} - {{fc.finish_date}}</td>
+											<td>{{fc.course_name}}</td>
+											<td>{{fc.maxParticipants}}</td>
+											<td>{{fc.partOnEvent}}</td>
+											<td>{{fc.location_name}}</td>
+											<td>{{fc.trainer_name}}</td>
+											<td>{{fc.course_price + 1000}},00 €</td>
 										</tr>
+
+										
+
 									</tbody>
 								</table>
 
