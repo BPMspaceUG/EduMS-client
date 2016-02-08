@@ -80,7 +80,9 @@ if(!is_array(json_decode($response, true))){
 switch ($navigationDestiny){
 
     case 'boot':
-    $content = $navigationDestiny . '|'; 
+    $content = $navigationDestiny . '|';
+
+    //include Controllers 
     include './controllers/topicCtrl.js';
     include './controllers/courseCtrl.js';
     include './controllers/brandCtrl.js';
@@ -95,6 +97,12 @@ switch ($navigationDestiny){
     include './controllers/trainerEventAssighnmentCtrl.js';
     include './controllers/brandLocationCtrl.js';
     include './controllers/navCtrl.js';
+    include './controllers/modalCtrl.js';
+
+    //include Directives
+    include './directives/lawdata.js';
+
+
     $content .= file_get_contents('boot.html');
     break;
 
