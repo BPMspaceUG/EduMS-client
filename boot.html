@@ -70,7 +70,7 @@ Hi from boot.html
 						</div>
 						
 						<div class="tab-pane" id="panel-preis">
-							<p>Tabelle der Einzelpreise ud Pakete</p>
+							<h2>Einzelpreise und Pakete</h2>
 							<table class="table">
 								<tbody>
 									<tr ng-repeat="c in courses">
@@ -102,7 +102,9 @@ Hi from boot.html
 									<div id="panel-element-9675257" class="panel-collapse collapse">
 										<div class="panel-body">
 											<div class="container-fluid">
-												<div class="row">{{DB-SchulungsAGB}}</div>
+												<div class="row">
+													<agb></agb>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -117,8 +119,9 @@ Hi from boot.html
 									<div id="panel-element-678923" class="panel-collapse collapse">
 										<div class="panel-body">
 											<div class="container-fluid">
-												<div class="row">Hier wird die Datenschutzerklärung
-													aus EduMS zugeladen</div>
+												<div class="row">
+													<datenschutzerklaerung></datenschutzerklaerung>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -134,8 +137,9 @@ Hi from boot.html
 										class="panel-collapse collapse">
 										<div class="panel-body">
 											<div class="container-fluid">
-												<div class="row">Imperssum der Organisation oder
-													entsprechender LINK</div>
+												<div class="row">
+													<impressum></impressum>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -187,24 +191,29 @@ Hi from boot.html
 									<i class="fa fa-calendar-check-o"></i> Aktuelle Termine
 								</h3>
 								<p>die nächsten 5 Kurse</p>
-								<table class="table text-left table-striped table-condensed">
+								<!-- Sidebar-Template in navCtrl: -->
+								<right-bar-course ng-repeat="e in nextEvents"></right-bar-course>
+
+								<table class="table table-condensed">
 									<tbody >
 
+										<!-- Sidebar-Template aus Bootstrapexample: -->
       									<table  ng-repeat="e in nextEvents"  width="100%">
-        									<tr>
-        										<h3>													
-        											<td width="70%" ><hr><p class="lead">{{e.course_name}} {{e.start_date}}</p></td>
-        											<td width="30%">													
-														<span class="fa-stack"> 
-															<i class="fa fa-circle fa-stack-2x"></i> 
-															<i class="fa fa-info fa-stack-1x fa-inverse"></i>
-														</span> 
-														<span class="fa-stack"> 
-															<i class="fa fa-circle fa-stack-2x"></i> 
-															<i class="fa fa-cart-plus fa-stack-1x fa-inverse"></i>
-														</span>
-													</td>
-        										</h3>
+        									<tr>				
+        										<td width="80%" >
+        											<hr>
+        											<h3>{{e.course_name}} {{e.start_date}}</h3>
+        										</td>
+        										<td width="20%">													
+													<span class="fa-stack"> 
+														<i class="fa fa-circle fa-stack-2x"></i> 
+														<i class="fa fa-info fa-stack-1x fa-inverse"></i>
+													</span> 
+													<span class="fa-stack"> 
+														<i class="fa fa-circle fa-stack-2x"></i> 
+														<i class="fa fa-cart-plus fa-stack-1x fa-inverse"></i>
+													</span>
+												</td>        										
 											</tr>
 											<tr>
 												<td>
@@ -309,29 +318,49 @@ Hi from boot.html
 			</div>
 
 		</div>
-		<div class="row">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		<div class="row" ng-controller="modalCtrl">
 			<div class="col-md-12">
-				<div class="modal fade" id="modal-container-89910" role="dialog"
-					aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal fade" id="modal-container-89910" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content ">
+
+
 							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal"
-									aria-hidden="true">× schließen</button>
-
-
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									× schließen
+								</button>
 								<h4 class="modal-title" id="myModalLabel">Termine</h4>
 							</div>
-							<div class="modal-body">
 
+
+							<div class="modal-body">
 								<div>
 									<button type="button" class="btn btn-success pull-right fa-2x">
 										<i class="fa fa-arrow-circle-right"></i> Anmeldung
 									</button>
 								</div>
 								<br></br>
-								<table class="table table-responsive table-hover table-striped"
-									style="width: 85%;">
+								<table class="table table-responsive table-hover table-striped" style="width: 85%;">
 									<thead>
 										<tr>
 											<th><i class="fa fa-cart-arrow-down fa-2x"></i></th>
@@ -344,71 +373,21 @@ Hi from boot.html
 										</tr>
 									</thead>
 									<tbody>
-										<tr>
+										<tr ng-repeat="e in nextEvents">
 											<td><i class="fa fa-square-o"></i></td>
-											<td><button type="button"
-													class="btn btn-success btn-block">TERMINGARANTIE</button></td>
+											<td>
+												<button type="button" class="btn btn-success btn-block">
+													TERMINGARANTIE
+												</button>
+											</td>
 											<td>12.12.2015 - 13.12.2015</td>
 											<td>SCHULUNG 1</td>
-											<td>ort<span></span> - strasse 1
+											<td>
+												ort<span></span> - strasse 1
 											</td>
 											<td>Vorname Nachname</td>
 											<td>790€</td>
 										</tr>
-
-										<tr>
-											<td><i class="fa fa-square-o"></i></td>
-											<td><button type="button"
-													class="btn btn-danger btn-block">WARTELISTE</button></td>
-											<td>XX.YY.2016 - XX.YY.2016</td>
-											<td>SCHULUNG 2</td>
-											<td>ort<span></span> - strasse 1
-											</td>
-											<td>Vorname Nachname</td>
-											<td>Z.ZZZ€</td>
-										</tr>
-
-										<tr>
-											<td><i class="fa fa-square-o"></i></td>
-											<td><button type="button"
-													class="btn btn-primary btn-block">TERMIN</button></td>
-											<td>XX.YY.2016 - XX.YY.2016</td>
-											<td>SCHULUNG 3</td>
-											<td>ort<span></span> - strasse 1
-											</td>
-											<td>Vorname Nachname</td>
-											<td>Z.ZZZ€</td>
-										</tr>
-
-										<tr>
-											<td><i class="fa fa-square-o"></i></td>
-											<td><button type="button"
-													class="btn btn-succes btn-block btn-sucsess-outline">
-													<i class="text-warning"><strong>nur noch 3
-															Plätze</strong></i>
-												</button></td>
-											<td>XX.YY.2016 - XX.YY.2016</td>
-											<td>SCHULUNG 4</td>
-											<td>ort<span></span> - strasse 1
-											</td>
-											<td>Vorname Nachname</td>
-											<td>Z.ZZZ€</td>
-										</tr>
-
-										<tr>
-											<td><i class="fa fa-square-o"></i></td>
-											<td><button type="button"
-													class="btn btn-succes btn-block btn-sucsess-outline">
-													<i class="text-danger"><strong>nur noch 1 Platz</strong></i>
-												</button></td>
-											<td>XX.YY.2016 - XX.YY.2016</td>
-											<td>SCHULUNG 4</td>
-											<td>ort<span></span> - strasse 1
-											</td>
-											<td>Vorname Nachname</td>
-											<td>Z.ZZZ€</td>
-										</tr>
-
 									</tbody>
 								</table>
 
@@ -460,6 +439,16 @@ Hi from boot.html
 
 			</div>
 		</div>
+
+
+
+
+
+
+
+
+
+
 		<div class="row">
 			<!----external footer-->
 			<div class="col-md-12" id="footer">
@@ -467,5 +456,8 @@ Hi from boot.html
 					inhalt - für Organisationen die keine eigene webseite haben.</div>
 			</div>
 		</div>
+
+
+
 	</div>
 
