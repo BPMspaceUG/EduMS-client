@@ -7,7 +7,9 @@
 app.controller('modalCtrl', ['$scope','$http', function ($scope, $http) {
 	//Der $http.get-service läd Ressourcen nach 
 
-
+ $scope.sortType     = 'start_date'; // set the default sort type
+ $scope.sortReverse  = false;  // set the default sort order
+ $scope.eventsearch   = '';     // set the default search/filter term
 
 
 	/*SELECT course_id, course_name, number_of_days, internet_course_article_id, min_participants, course_description, course_mail_desc, course_price, course_certificate_desc FROM `course` WHERE deprecated = 0*/
@@ -22,8 +24,16 @@ app.controller('modalCtrl', ['$scope','$http', function ($scope, $http) {
 /*FUTUREEVENTS-------------------------------------------------------------------------------------------*/
 	$http.get('/EduMS/api/index.php/'+bname+'/'+pw+'/getFutureCourses')
 	.then(function(response) {
-		$scope.futureCourses = response.data;
-		console.log('getFutureCourses: '); console.log($scope.futureCourses);
+		delete response.data.footer;
+		delete response.data.topnav;
+		$scope.futureCourses = Object.keys(response.data).map(function (key) {return response.data[key]});
+		console.log($scope.futureCourses)
+
+		/*for (var i = 0; i < $scope.futureCourses.length; i++) {
+			$scope.futureCourses[i] = Object.keys($scope.futureCourses[i]).map(function (key) {return $scope.futureCourses[i][key]})
+		};*/
+
+		//console.log('getFutureCourses: '); console.log($scope.futureCourses);
 
 		/*Folgender Codeabschnitt definiert freie Plätze und wurde durch besseres sql ersetzt
 		$scope.futureCourses.leftSeats = [];
