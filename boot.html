@@ -18,7 +18,7 @@ Hi from boot.html
 	<!--div class="row" ng-controller="brandLocationCtrl"></div-->
 	<!--div class="row" ng-controller="eventCtrl"></div-->
 	<!--div class="row" ng-controller="locationCtrl"></div-->
-	<!--div class="row" ng-controller="organizationCtrl"></div-->
+	
 	<!--div class="row" ng-controller="statusEventCtrl"></div-->
 	<!--div class="row" ng-controller="statusEventGuaranteeCtrl"></div-->
 	<!--div class="row" ng-controller="statusTrainerCtrl"></div-->    
@@ -27,8 +27,9 @@ Hi from boot.html
 		<div class="row" ng-controller="navCtrl">
 			<!----content & sidebar-->
 			<div class="col-md-8" id="container-content" >
-				<div class="tabbable" id="tabs-230047">
+				<div class="tabbable" id="tabs-sidebar">
 					<ul class="nav nav-tabs well">
+
 						<li class="active">
 							<a href="#" data-toggle="tab" data-target="#panel-brand,#panel-brand-sidebar">
 								<i class="fa fa-university"></i>
@@ -53,15 +54,28 @@ Hi from boot.html
 					<div class="tab-content">						
 						<div ng-repeat="t in topics" class="tab-pane" id="panel-{{t.topic_name}}">
 							<div class="col-md-12 well well-lg">
-							<p>{{t.topic_name_raw}}</p>
+							<h2>{{t.topic_name_raw}}</h2>
 								<div id="section{{t.topic_nr}}">
-									{{t.topic_description}}
+									<h4>{{t.topic_description}}</h4>
 								</div>
 								<nav class="navbar navbar-default">
 									<div class="container-fluid">
-										<div>
+										<div ng-repeat="ct in topiccourseCourse">
 											<ul class="nav navbar-nav">
-												<li><a href="#topic_{{t}}_course{{c}}"></a>ng-repeat="c in courses"</li>
+												<div ng-if="t.topic_id ==  ct.topic_id" >
+													<h3> - {{ct.courseHeadline}} -<small>  {{ct.number_of_days}} Tage</small></h3>
+													<div class="list-group-item-heading">
+													
+													</div>
+													<li class="list-group-item">
+													Name: {{ct.course_name }}</br>
+													Beschreibung: {{ct.course_description }}
+													C-ID: {{ct.topic_course_id }}
+													C-Image: {{ct.courseImage }}
+													 
+													</li>
+													<li class="list-group-item">Preis: {{ct.course_price}}</li>
+												</div>
 											</ul>
 										</div>
 									</div>
@@ -74,7 +88,7 @@ Hi from boot.html
 							<table class="table">
 								<tbody>
 									<tr ng-repeat="c in courses">
-										<td><h3><button type="button" class="btn btn-info">Nr({{$index +1}}) Name: {{c.course_name}}</button></h3></td><td><span class="label label-success">Price: {{c.course_price}}</span></td>
+										<td><h3><button type="button" class="btn btn-info btn-lg">Nr({{$index +1}}) Name: {{c.course_name}}</button></h3></td><td><span class="label label-success ">Price: {{c.course_price}}</span></td>
 									</tr>
 								</tbody>
 							</table>
@@ -149,9 +163,12 @@ Hi from boot.html
 					</div>
 				</div>
 				<div>
-					<div class="col-md-12 well well-lg" id="container-footer">
-						<p>container-footer - statischer Inhalt (unabhängig von
-							Menüpunkt) der aus EduMS geladen wird</p>
+					<div  ng-controller="organizationCtrl" class="col-md-12 well well-lg" id="container-footer">
+
+						<h4> {{organization[0].address_line_1 }} {{organization[0].address_line_2 }} {{organization[0].city }}
+							{{organization[0].contact_url }} {{organization[0].country }} {{organization[0].organization_id }}
+							{{organization[0].organization_name }} {{organization[0].zip }} ~~~
+							container-footer - statischer Inhalt (unabhängig vom Menüpunkt) der aus EduMS geladen wird</h4>
 					</div>
 				</div>
 			</div>
@@ -160,44 +177,30 @@ Hi from boot.html
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 			<div class="col-md-4 text-center" id="sidebar">
 				<div>
-
-					<a id="modal-89910" href="#modal-container-89910" role="button" class="btn btn-warning btn-block" data-toggle="modal">
+					<a id="modal-1" href="#modal-container-1" role="button" class="btn btn-warning btn-block" data-toggle="modal">
 						<button type="button" class="btn btn-warning btn-block">
 							<i class="fa fa-arrow-circle-right"></i> Termine &amp; Anmeldung
 						</button>
 					</a>
 
-					<div class="tabbable" id="tabs-230047">
-						<div class="tab-content">
-							<div class="tab-pane active" id="panel-brand-sidebar">
+
+					<div class="tabbable" id="tabs-sidebar">
+						<div class="tab-content">							
+
+							<div class="tab-pane active" id="panel-brand-sidebar" role="tabpanel">
 								<h3 class="text-center">
 									<i class="fa fa-calendar-check-o"></i> Aktuelle Termine
 								</h3>
 								<p>die nächsten 5 Kurse</p>
 								<!-- Sidebar-Template in navCtrl: -->
-								<right-bar-course ng-repeat="e in nextEvents"></right-bar-course>
+								<right-bar-course-all ng-repeat="e in nextEvents|limitTo:5"></right-bar-course-all>
 
-								<table class="table table-condensed">
+								<!--Sidebar-Template aus Bootstrapexample:  table class="table table-condensed">
 									<tbody >
 
-										<!-- Sidebar-Template aus Bootstrapexample: -->
+										
       									<table  ng-repeat="e in nextEvents"  width="100%">
         									<tr>				
         										<td width="80%" >
@@ -253,84 +256,32 @@ Hi from boot.html
 										</tr>
 										<tr>
 									</tbody>
-								</table>
-
-
-
-								<div class="alert alert-info">
-									<p>INFO - die nächsten 5 Termien aus ALLEN Schulungen aus
-										eduMS anzeiegn</p>
-								</div>
+								</table-->								
 							</div>
 
-
-							<div class="tab-pane" id="panel-topic_1-sidebar">
-
-								<div class="alert alert-info">
-									<p>die nächsten 5 Termien aus TOPIC 1 Schulungen</p>
-								</div>
-							</div>
-							<div class="tab-pane" id="panel-topic_2-sidebar">
-								<div class="alert alert-info">
-									<p class="alert alert-info">die nächsten 5 Termien aus
-										TOPIC 2 Schulungen</p>
-								</div>
-							</div>
-							<div class="tab-pane" id="panel-topic_3-sidebar">
-								<div class="alert alert-info">
-									<p>die nächsten 5 Termien aus TOPIC 3 Schulungen</p>
-								</div>
-							</div>
 							<div class="tab-pane" id="panel-preis-sidebar">
-								<div class="alert alert-info">
-									<p>die nächsten 5 Termien aus ALLEN Schulungen</p>
-								</div>
+								<right-bar-course-all ng-repeat="e in nextEvents|limitTo:5"></right-bar-course-all>
 							</div>
 							<div class="tab-pane" id="panel-standort-sidebar">
-								<div class="alert alert-info">
-									<p>die nächsten 5 Termien aus ALLEN Schulungen</p>
-								</div>
+								<right-bar-course-all ng-repeat="e in nextEvents|limitTo:5"></right-bar-course-all>
 							</div>
 							<div class="tab-pane" id="panel-sonstiges-sidebar">
-								<div class="alert alert-info">
-									<p>die nächsten 5 Termien aus ALLEN Schulungen</p>
-								</div>
+								<right-bar-course-all ng-repeat="e in nextEvents|limitTo:5"></right-bar-course-all>
 							</div>
 
-							<a id="modal-89910" href="#modal-container-89910" role="button"
-								class="btn btn-warning btn-block" data-toggle="modal"><button
-									type="button" class="btn btn-warning btn-block">
-									<i class="fa fa-arrow-circle-right"></i> Termine &amp;
-									Anmeldung
-								</button></a>
-
-
-						</div>
+							<div ng-repeat="tsb in topics"  class="tab-pane" id="panel-{{tsb.topic_name}}-sidebar" role="tabpanel">
+								<right-bar-course-by-topic ng-repeat="sbc in tsb.sideBarCourses"></right-bar-course-by-topic>
+							</div>				
+						
 					</div>
 				</div>
 
 				<div class="alert alert-info">
-					<a class="text-danger" href="http://schema.org/EducationEvent">WICHTIG
-						muss http://schema.org/EducationEvent unterstützen</a>
-
+					<a class="text-danger" href="http://schema.org/EducationEvent"> WICHTIG	muss http://schema.org/EducationEvent unterstützen</a>
+					(Alle Propertys in Info anzeigen?)
 				</div>
-
 			</div>
-
 		</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -340,7 +291,7 @@ Hi from boot.html
 
 		<div class="row" ng-controller="modalCtrl">
 			<div class="col-md-12">
-				<div class="modal fade" id="modal-container-89910" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal fade" id="modal-container-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content ">
 
@@ -355,41 +306,114 @@ Hi from boot.html
 
 							<div class="modal-body">
 								<div>
-									<button type="button" class="btn btn-success pull-right fa-2x">
+									<button type="button" class="btn btn-success pull-right fa-1x">
 										<i class="fa fa-arrow-circle-right"></i> Anmeldung
 									</button>
 								</div>
+
 								<br></br>
-								<table class="table table-responsive table-hover table-striped" style="width: 85%;">
+
+								<form>
+    								<div class="form-group">
+	      								<div class="input-group">
+	        								<div class="input-group-addon"><i class="fa fa-search"></i></div>
+	        								<input type="text" class="form-control" placeholder="search in table" ng-model="eventsearch">
+	      								</div>      
+    								</div>
+  								</form>
+
+								<table class="table table-responsive table-hover table-striped" style="width: 98%;">
 									<thead>
 										<tr>
-											<th><i class="fa fa-cart-arrow-down fa-2x"></i></th>
-											<th><i class="fa-1x">Status</i></th>
-											<th><i class="fa-1x">Datum</i></th>
-											<th><i class="fa-1x">Schulungsname</i></th>
-											<th><i class="fa-1x">MaxTeilnehmer</i></th>
-											<th><i class="fa-1x">Reserviert</i></th>
-											<th><i class="fa-1x">Schulungsort</i></th>
-											<th><i class="fa-1x">Trainer**</i></th>
-											<th><i class="fa-1x">Preis* </i></th>
+											<th>
+												<i class="fa fa-cart-arrow-down fa-2x"></i>
+											</th>
+											<th>
+												<a href="#">
+										            Status 
+										        </a>
+											</th>
+											<th>
+												<a href="#" ng-click="sortType = 'start_date'; sortReverse = !sortReverse">
+										            Von 
+										            <span ng-show="sortType == 'start_date' && !sortReverse" class="fa fa-caret-down"></span>
+										            <span ng-show="sortType == 'start_date' && sortReverse" class="fa fa-caret-up"></span>
+										        </a>
+											</th>
+											<th>
+												<a href="#" ng-click="sortType = 'finish_date'; sortReverse = !sortReverse">
+										            Bis 
+										            <span ng-show="sortType == 'finish_date' && !sortReverse" class="fa fa-caret-down"></span>
+										            <span ng-show="sortType == 'finish_date' && sortReverse" class="fa fa-caret-up"></span>
+										        </a>
+											</th>
+											<th>
+												<a href="#" ng-click="sortType = 'course_name'; sortReverse = !sortReverse">
+										            Schulungsname 
+										            <span ng-show="sortType == 'course_name' && !sortReverse" class="fa fa-caret-down"></span>
+										            <span ng-show="sortType == 'course_name' && sortReverse" class="fa fa-caret-up"></span>
+										        </a>
+											</th>
+											<th>
+												<a href="#" ng-click="sortType = 'maxParticipants'; sortReverse = !sortReverse">
+										            MaxTeilnehmer 
+										            <span ng-show="sortType == 'maxParticipants' && !sortReverse" class="fa fa-caret-down"></span>
+										            <span ng-show="sortType == 'maxParticipants' && sortReverse" class="fa fa-caret-up"></span>
+										        </a>
+											</th>
+											<th>
+												<a href="#" ng-click="sortType = 'partOnEvent'; sortReverse = !sortReverse">
+										            Reserviert 
+										            <span ng-show="sortType == 'partOnEvent' && !sortReverse" class="fa fa-caret-down"></span>
+										            <span ng-show="sortType == 'partOnEvent' && sortReverse" class="fa fa-caret-up"></span>
+										        </a>
+											</th>
+											<th>
+												<a href="#" ng-click="sortType = 'location_name'; sortReverse = !sortReverse">
+										            Schulungsort 
+										            <span ng-show="sortType == 'location_name' && !sortReverse" class="fa fa-caret-down"></span>
+										            <span ng-show="sortType == 'location_name' && sortReverse" class="fa fa-caret-up"></span>
+										        </a>
+											</th>
+											<th>
+												<a href="#" ng-click="sortType = 'trainer_name'; sortReverse = !sortReverse">
+										            Trainer** 
+										            <span ng-show="sortType == 'trainer_name' && !sortReverse" class="fa fa-caret-down"></span>
+										            <span ng-show="sortType == 'trainer_name' && sortReverse" class="fa fa-caret-up"></span>
+										        </a>
+											</th>
+											<th>
+												<a href="#" ng-click="sortType = 'course_price'; sortReverse = !sortReverse">
+										            Preis* 
+										            <span ng-show="sortType == 'course_price' && !sortReverse" class="fa fa-caret-down"></span>
+										            <span ng-show="sortType == 'course_price' && sortReverse" class="fa fa-caret-up"></span>
+										        </a>
+											</th>
 										</tr>
 									</thead>
 									<tbody>
 										{{futureCourses.leftSeats[3861]}}
-										<tr ng-repeat="fc in futureCourses">
+										<tr ng-repeat="fc in futureCourses | orderBy:sortType:sortReverse | filter:eventsearch">
 											<td><i class="fa fa-square-o"></i></td>
 											<td>
-												
+												<div ng-if="(fc.maxParticipants-fc.partOnEvent)<4&&(fc.maxParticipants-fc.partOnEvent)>(-1)">
+													<button type="button" class="btn btn-danger btn-block">Noch {{fc.maxParticipants-fc.partOnEvent}} Plätze</button>
+												</div>
+												<div ng-if="(fc.maxParticipants-fc.partOnEvent)<0">
+													<button type="button" class="btn btn-info btn-block">Noch {{fc.maxParticipants-fc.partOnEvent}} Plätze?</button>
+												</div>
+												<div ng-if="(fc.maxParticipants-fc.partOnEvent)>3">
 													<button type="button" class="btn btn-success btn-block">Termingarantie</button>
-												
+												</div>															
 											</td>
-											<td>{{fc.start_date}} - {{fc.finish_date}}</td>
+											<td>{{fc.start_date}}</td>
+											<td>{{fc.finish_date}}</td>
 											<td>{{fc.course_name}}</td>
 											<td>{{fc.maxParticipants}}</td>
 											<td>{{fc.partOnEvent}}</td>
 											<td>{{fc.location_name}}</td>
 											<td>{{fc.trainer_name}}</td>
-											<td>{{fc.course_price + 1000}},00 €</td>
+											<td><span>{{fc.course_price | currency:"€ ":0}}</span></td>
 										</tr>
 
 										
@@ -402,16 +426,10 @@ Hi from boot.html
 
 
 								<div class="alert alert-info">
-									<p>Liste aller zukünftigen Schuzlungstermine (today +1) -
-										sortiert nach datum</p>
+									<p>Liste aller zukünftigen Schulungstermine (<now()) - sortiert nach datum</p>
 									<p>- vorgefilter</p>
 									<p>-- nach Topic wenn von topic Seite kommend</p>
 									<p>-- mit "nur Schulungen" = ohne prüfungtermine</p>
-									<p>
-										Seite kommend - <br></br> Bitte <a
-											href="https://mottie.github.io/tablesorter/docs/example-widget-bootstrap-theme.html">Tabelsorter</a>
-										benutzen.
-									</p>
 									<p>
 										Beispiel wie unter <a
 											href="https://www.mitsm.de/mitsm/termine-anmeldung">mITSM
@@ -432,9 +450,6 @@ Hi from boot.html
 									<i class="fa fa-arrow-circle-right"></i> Anmeldung
 								</button>
 
-
-
-
 							</div>
 
 						</div>
@@ -444,16 +459,8 @@ Hi from boot.html
 				</div>
 
 			</div>
+
 		</div>
-
-
-
-
-
-
-
-
-
 
 		<div class="row">
 			<!----external footer-->
@@ -461,9 +468,10 @@ Hi from boot.html
 				<div class="well well-lg well_darkgrey">footer - statischer
 					inhalt - für Organisationen die keine eigene webseite haben.</div>
 			</div>
+
 		</div>
 
-
-
 	</div>
+	</div>
+
 
