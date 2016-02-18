@@ -1,49 +1,118 @@
 <script  type="text/javascript">
 
-/*Das angular.module initialisiert Angular*/
+/*
+Der Controller navCtrl fordert über den $http-service JSON-Datensätze DB-Views und reorganisiert sie in $scope.
+Die Templates rightBarCourseByTopic und rightBarCourseAll zeigen die nächsten courses in Abhängigkeit des ausgewählten Topics an.
+Die lorem function erzeugt Dummytext.
+
+------------------------------------------------------------------------------------------------------------------------------
+DB-Views: 	|	`all_events`							|`v_futurecourses` 						|`v_topic_coursecourse` 		
+------------------------------------------------------------------------------------------------------------------------------
+$scope		|	.allNextEvents**++						|++topiccourseCourselist++				|++topiclist++			
+------------------------------------------------------------------------------------------------------------------------------
+			|											|										|						
+Bsp.Daten	|	course_id: "103"						|$$hashKey: "object:295"				|$$hashKey: "object:263"
+			|	course_name: "ISO 27001 Foundation"		|courseHeadline: "course1 Headline"		|deprecated: "0"
+			|	event_id: "3893"						|courseImage: null						|footer: null
+			|	event_status_id: "2"					|course_description: "co(...) database"	|sideBarCourses: Array[0]
+			|	eventguaranteestatus: "1"				|course_id: "1"							|sidebar_description: null
+			|	finish_date: "2016-02-16"				|course_name: "course1"					|topicHeadline: ""
+			|	finish_time: "17:00:00"					|course_price: "1035"					|topicImage: null
+			|	internet_course_article_id: "736"		|number_of_days: "2"					|topic_description: "Topic(...)Schwoanshaxn."
+			|	internet_location_article_id: "0"		|tc_course_id: "1"						|topic_id: "1"
+			|	internet_location_name: "Ogox..inu"		|topic_id: "1"							|topic_name: "Topic1"
+			|	start_date: "2016-02-15"				|										|topic_name_raw: "Topic 1"
+			|	start_time: "09:00:00"					|										|topic_nr: 0
+			|	test: "0"								|										|trainer_id: "14"
+------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------
+/getCourses:
+SELECT course_id, course_name, number_of_days, internet_course_article_id, min_participants, course_description, 
+	course_mail_desc, course_price, course_certificate_desc 
+FROM `course` WHERE deprecated = 0
+------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------
+
+*/
 
 /*Ein controller wird für einen bestimmten Sinnabschnitt innerhalb von Angular definiert*/
 app.controller('navCtrl', ['$scope','$http', function ($scope, $http) {
-	//Der $http.get-service läd Ressourcen nach 
 
+//Der $http.get-service läd Ressourcen nach 
 /*TOPICS-------------------------------------------------------------------------------------------*/
 	$http.get('/EduMS/api/index.php/'+bname+'/'+pw+'/getTopics')
 	.then(function(response) {//wenn angeforderte Daten empfangen wurden...
-		$scope.topics = response.data.topiclist;
-		if ($scope.topics.length>5) {$scope.topics = $scope.topics.slice(0,5)};//limit to 5 to prevent overload
-		//HTML5 3.2.3.1: Das id-Attribut darf kein Leerzeichen enthalten deshalb wird der topic_name nach name_raw kopiert u. anschließend die Leerzeichen entfernt
+		$scope.topics = response.data.topiclist.topiclist; //Navigation
+		$scope.topiccourseCourse = Object.keys(response.data.topiccourseCourselist)
+		.map(function (key) {return response.data.topiccourseCourselist[key]}); //Topic-Course Panel
+		$scope.allNextEvents = response.data.allNextEvents //Termine & Anmeldung Modal
+		$scope.nextEvents =  Object.keys(response.data.allNextEvents)
+		.map(function (key) {return response.data.allNextEvents[key]});
+		$scope.nextEvents = $scope.nextEvents.slice(0,4) //Sidebar-next 'x' Events
+
+		for (var i = 0; i < $scope.nextEvents.length; i++) { //directive: 'rightBarCourseAll' -> helpVariables init
+			$scope.nextEvents[i].btnInfo=false; //Show
+			$scope.nextEvents[i].btnRegister=false; //Show
+			if (i==1) {$scope.nextEvents[i].btnInfo=true}; //Sample
+			$scope.nextEvents[i].sysName=$scope.nextEvents[i].course_name.replace(/\W+/g,'');
+			//console.log('nextEvents['+i+']:');console.log($scope.nextEvents[i]); console.log('')
+		};
+
+		console.log('ResponseData von getTopics: (Auskommentiert)')//console.log(response.data)
+
+
+		if ($scope.topics.length>8) {$scope.topics = $scope.topics.slice(0,8)};//limit to 5 to prevent overload
+			//HTML5 3.2.3.1: Das id-Attribut darf kein Leerzeichen enthalten deshalb wird der topic_name nach name_raw kopiert u. anschließend die Leerzeichen entfernt
 			for (var i = 0; i < $scope.topics.length; i++) {
 				$scope.topics[i].topic_name_raw = $scope.topics[i].topic_name;			
 				$scope.topics[i].topic_nr = i;			
 				$scope.topics[i].topic_name = $scope.topics[i].topic_name.replace(/\s+/g,'');//löscht alle Leerzeichen			
+			}
+
+			/*Suche Kurse und weise sie den Topics zu. Suche events zu den Kursen der Topics und weise sie den Topics zu*/
+			var aNE=$scope.allNextEvents
+			for (var i = 0; i < $scope.topics.length; i++) { //für alle topics
+				var t=$scope.topics[i]
+
+				for (var j = 0; j < $scope.topiccourseCourse.length; j++) { //für alle topiccourCourse-Einträge
+					var tcC=$scope.topiccourseCourse[j]
+
+					//Wenn die topic_id des Elements aus der Topicliste == der topic_id des Elements aus der m:n-TopicCourses-Liste ist
+					//dann lege in der Topicliste ein Array für die Sidebarelemente an. 
+					//Vergleiche darauf hin die tc_course_id des TopicCourse Elements mit den course_id's aus der AllNextEvents-Liste.
+					//Wenn die id's identisch sind füge dem aktuellen SidebarArray das Event hinzu
+					if (t.topic_id == tcC.topic_id) {	//wenn ids gleich sind
+						if (!$scope.topics[i].sideBarCourses){$scope.topics[i].sideBarCourses=[]}//lege sidebarArray für topic an
+						if ($scope.topics[i].sideBarCourses.length<3) { //sidebar soll 5 elemente haben
+													
+							for (var k = 0; k < aNE.length; k++) {	//für alle allNextEvents-Einträge
+								if (tcC.tc_course_id == aNE[k].course_id) { //nur Events die zur aktuellen course_id passen
+									$scope.topics[i].sideBarCourses.push(aNE[k]) //befülle SideBar-Array
+								};								
+							};
+						};
+					};					
+				};
+
 			};
-		console.log('getTopics: '); console.log($scope.topics);
+			console.log('fertiges $scope.topics: (Auskommentiert)');//console.log($scope.topics);			
 	},function(response) {$scope.topics = 'Fehler in topicCtrl-$http: '+response}
 	)
 
-
-	/*SELECT course_id, course_name, number_of_days, internet_course_article_id, min_participants, course_description, course_mail_desc, course_price, course_certificate_desc FROM `course` WHERE deprecated = 0*/
 	$http.get('/EduMS/api/index.php/'+bname+'/'+pw+'/getCourses')
 	.then(function(response) {
 		$scope.courses = response.data.courselist;
-		console.log('getCourses: '); console.log($scope.courses);
+		//console.log('getCourses: '); console.log($scope.courses);
 
-		for (var i = 0; i < $scope.courses.length; i++) {
+		for (var i = 0; i < $scope.courses.length; i++) { //Zufallspreisgenerator
 			if ($scope.courses[i].course_price || $scope.courses[i].course_price < 1) {
 				$scope.courses[i].course_price =  Math.floor(Math.random()*3000);
-			};
-			
+			};			
 		};
 	},function(response) {$scope.courses = 'Fehler in courseCtrl-$http: '+response}
 	)
 
-
-
-
 /*LOCATIONS-------------------------------------------------------------------------------------------*/
-
-
-
 	$http.get('/EduMS/api/index.php/'+bname+'/'+pw+'/getAllLocations')
 	.then(function(response) {
 		$scope.location = response.data;
@@ -57,28 +126,61 @@ app.controller('navCtrl', ['$scope','$http', function ($scope, $http) {
 	},function(response) {$scope.location = 'Fehler in locationCtrl-$http: '+response}
 	)
 
-/*FUTUREEVENTS-------------------------------------------------------------------------------------------*/
-	
-	$http.get('/EduMS/api/index.php/'+bname+'/'+pw+'/getNextFiveEvents')
-	.then(function(response) {
-		$scope.nextEvents = response.data;
-		//delete ist workaround für defaultresponse - evtl. response differenzieren
-		delete $scope.nextEvents.footer;
-		delete $scope.nextEvents.topnav;
-
-	},function(response) {$scope.nextEvents = 'Fehler in eventCtrl-$http: '+response}
-	)
-
 }])
 
-app.directive('rightBarCourse', function() {//sideBarCourse = Directive Name
-	return{template:'<div class="list-group"><a href="#" class="list-group-item active"><h4 class="list-group-item-heading">{{e.course_name}} <span class="badge"> {{e.start_date}} </span></h4><div><button type="button" class="btn btn-info btn-lg"><span class="fa-stack"><i class="fa fa-info fa-stack-1x fa-inverse"></i></span>Info</button> - <button type="button" class="btn btn-warning btn-lg"><span class="fa-stack"><i class="fa fa-cart-plus fa-stack-1x fa-inverse"></i></span>reservieren</button></div></a></div>'}
+
+/*SIDEBARTEMPLATES-------------------------------------------------------------------------------------------*/	
+app.directive('rightBarCourseAll', function() {//sideBarCourse = Directive Name
+	return{
+//Sidebarelement für allgemeine Kurse
+template:'<div class="list-group">\
+	<a class="list-group-item active">\
+		<h3 class="list-group-item-heading">{{e.course_name}} \
+			<span class="label label-danger"> {{e.start_date}} </span>\
+		</h3>'+
+
+		'<div>\
+			<button type="button" class="btn btn-info" ng-click= "e.btnInfo=!e.btnInfo">\
+				<span class="fa-stack">\
+					<i class="fa fa-info fa-stack-1x fa-inverse"></i>\
+				</span>Info</button> - <button type="button" class="btn btn-success" ng-model="reservate" ng-click= "e.btnRegister=!e.btnRegister">\
+				<span class="fa-stack">\
+					<i class="fa fa-cart-plus fa-stack-1x fa-inverse"></i>\
+				</span>reservieren</button>\
+		</div>'+
+
+		'<div  ng-show="e.btnInfo">\
+		<h3>Start: {{e.start_date}} {{e.start_time}}</h3> \
+		<h3>Ende: {{e.finish_date}} {{e.finish_time}}</h3>\
+		<h3>Internet-Location-Name: {{e.internet_location_name}}</h3>\
+		</div>'+
+		
+		'<div  ng-show="e.btnRegister">\
+			<form class="form-horizontal">\
+	  		<div class="form-group">\
+	    		<label for="inputName{{e.sysName}}">Name</label>\
+	    		<input type="text" class="form-control" id="inputName{{e.sysName}}" placeholder="nur 1 Namensfeld?">\
+	  		</div>\
+	  		<div class="form-group">\
+	    		<label for="inputEmail{{e.sysName}}">Email</label>\
+	    		<input type="email" class="form-control" id="inputEmail{{e.sysName}}" placeholder="Validität.prüfen@????.TLD">\
+	  		</div>\
+	  		<button type="submit" class="btn btn-default">Reservierungsanfrage Abschicken</button>\
+			</form>\
+		</div>'+
+	'</a>\
+</div>'
+
+	}
 });
-
-
-
-
-
+app.directive('rightBarCourseByTopic', function() {//sideBarCourse = Directive Name
+	return{
+		template:'<div class="list-group"><a href="#" class="list-group-item active"><h3 class="list-group-item-heading">{{sbc.course_name}} '+
+		'<span class="label label-danger"> {{sbc.start_date}}</span></h3><div><button type="button" class="btn btn-info "><span class="fa-stack">'+
+		'<i class="fa fa-info fa-stack-1x fa-inverse"></i></span>Info</button> - <button type="button" class="btn btn-success">'+
+		'<span class="fa-stack"><i class="fa fa-cart-plus fa-stack-1x fa-inverse"></i></span>reservieren</button></div></a></div>'
+	}
+});
 
 /*Dummytextgenerator
 * max = Zahl der Rückgabewörter
