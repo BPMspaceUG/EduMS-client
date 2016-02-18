@@ -1,4 +1,6 @@
 <?php
+
+
 /**User: cwalonka, cneuland*/
 require_once 'config.inc.php';
 require_once '../EduMS/custom/scripte.html';//file_get_contents($baseURL.'/js');
@@ -83,19 +85,19 @@ switch ($navigationDestiny){
     $content = $navigationDestiny . '|';
 
     //include Controllers 
-    include './controllers/topicCtrl.js';
-    include './controllers/courseCtrl.js';
-    include './controllers/brandCtrl.js';
-    include './controllers/TopicCtrl.js';
-    include './controllers/brandTopicCtrl.js';
-    include './controllers/eventCtrl.js';
-    include './controllers/locationCtrl.js';
+    //include './controllers/topicCtrl.js';
+    //include './controllers/courseCtrl.js';
+    //include './controllers/brandCtrl.js';
+    //include './controllers/TopicCtrl.js';
+    //include './controllers/brandTopicCtrl.js';
+    //include './controllers/eventCtrl.js';
+    //include './controllers/locationCtrl.js';
+    //include './controllers/statusEventCtrl.js';
+    //include './controllers/statusEventGuaranteeCtrl.js';
+    //include './controllers/statusTrainerCtrl.js';
+    //include './controllers/trainerEventAssighnmentCtrl.js';
+    //include './controllers/brandLocationCtrl.js';
     include './controllers/organizationCtrl.js';
-    include './controllers/statusEventCtrl.js';
-    include './controllers/statusEventGuaranteeCtrl.js';
-    include './controllers/statusTrainerCtrl.js';
-    include './controllers/trainerEventAssighnmentCtrl.js';
-    include './controllers/brandLocationCtrl.js';
     include './controllers/navCtrl.js';
     include './controllers/modalCtrl.js';
 
