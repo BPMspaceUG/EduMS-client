@@ -2,21 +2,9 @@
 
 
 /**User: cwalonka, cneuland*/
+
 require_once 'config.inc.php';
-require_once '../EduMS/custom/scripte.html';//file_get_contents($baseURL.'/js');
-require_once '../EduMS/custom/cssSheets.html';//file_get_contents($baseURL.'/js');
-require_once '../EduMS/custom/3.3.6 bootstrap.min.css';//file_get_contents($baseURL.'/js');
-require_once 'controllers/initAppAndCredents.js';//file_get_contents($baseURL.'/js');
-
-//include '../EduMS/custom/font-awesome-4.5.0/css/font-awesome.min.css';//file_get_contents($baseURL.'/js');
-//$css = file_get_contents($baseURL.'/css');
-
 $baseURL = $config['srv']['addr'].'/'.$config['auth']['login'].'/'.$config['auth']['token'];
-//$cssSheets = file_get_contents($baseURL.'/cssSheets');
-//$bootstrap = file_get_contents($baseURL.'/bootstrap');
-//$bootstrapFontAwesome = file_get_contents($baseURL.'/bootstrapFontAwesome');
-
-
 
 $topnav='';$sidebar='';$response = '';$contentid = '';$footer = '';
 
@@ -31,8 +19,6 @@ if(array_key_exists('navdest',$_GET)){
 
 $responseurl = "";
 switch ($navigationDestiny){
-    // $config['srv']['addr'] = 'http://localhost:4040/EduMS/api/index.php';
-
     case 'packages':
         $responseurl = $baseURL.'/package'.$contentid;
         break;
@@ -58,6 +44,7 @@ switch ($navigationDestiny){
 $response = file_get_contents($responseurl);
 
 
+
 if(isset($_REQUEST['debug']) && $_REQUEST['debug']==18234){
     echo "<hr>".($responseurl)."<hr>";
     var_dump(is_array(json_decode($response, true)));
@@ -75,48 +62,16 @@ if(!is_array(json_decode($response, true))){
 }
 
 
-
-
-
-
 switch ($navigationDestiny){
 
-    case 'boot':
-    $content = $navigationDestiny . '|';
-
-    //include Controllers 
-    //include './controllers/topicCtrl.js';
-    //include './controllers/courseCtrl.js';
-    //include './controllers/brandCtrl.js';
-    //include './controllers/TopicCtrl.js';
-    //include './controllers/brandTopicCtrl.js';
-    //include './controllers/eventCtrl.js';
-    //include './controllers/locationCtrl.js';
-    //include './controllers/statusEventCtrl.js';
-    //include './controllers/statusEventGuaranteeCtrl.js';
-    //include './controllers/statusTrainerCtrl.js';
-    //include './controllers/trainerEventAssighnmentCtrl.js';
-    //include './controllers/brandLocationCtrl.js';
-    include './controllers/organizationCtrl.js';
-    include './controllers/navCtrl.js';
-    include './controllers/modalCtrl.js';
-
-    //include Directives
-    include './directives/lawdata.js';
-
-
-    $content .= file_get_contents('boot.html');
-    break;
-
-    case 'monitor':
-        //$topnav = ;
-        $sidebar = 'sidebar';
-        $content = file_get_contents('controllers/monitor.php');   
-        $content .= '<div ng-controller="monitorCtrl">';   
-        $content .= file_get_contents('viewressources/inputFieldAndButton.html');   
-        $content .= $response.'</div>';   
-        $footer = 'footer';
-    break;
+    //case 'monitor':
+        //$sidebar = 'sidebar';
+        //$content = file_get_contents('controllers/monitor.php');   
+        //$content .= '<div ng-controller="monitorCtrl">';   
+        //$content .= file_get_contents('viewressources/inputFieldAndButton.html');   
+        //$content .= $response.'</div>';   
+        //$footer = 'footer';
+    //break;
 
     case 'topics':
         $response = json_decode($response, true);
@@ -285,15 +240,19 @@ if (isset($response['topnav'])) {
     $footer = $footer==''?getFooter($response,$baseURL):$footer;
 }
 
+$ct = $response['ct'];
+$script = $response['script'];
+$controller = $response['controller'];
+$css = $response['css'];
+$directive = $response['directive'];
 
 //Konstruktion der Ausgabepage
 echo <<<EOF
 <!DOCTYPE html>
 <html lang="de" ng-app='application'>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">     
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <!--link rel="stylesheet" type="text/css" href="../EduMS/custom/font-awesome-4.5.0/css/font-awesome.min.css"-->    
+    $css
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">        
 </head>
 <body>
     <div id="kopfbereich">
@@ -305,7 +264,7 @@ echo <<<EOF
     </div>
 
     <div id="inhalt">
-        $content
+      $ct
     </div>
 
     <div id="fussbereich">
@@ -317,6 +276,9 @@ echo <<<EOF
 <span class="label label-warning">Warning</span>
 
 </body>
+$script
+$controller 
+$directive
 </html>
 EOF;
 ?>
