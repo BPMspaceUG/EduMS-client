@@ -1,9 +1,11 @@
 <?php
 
 /*Define self and location*/
+//Beispiel login: ['BPMspaceID1','BtopgwtID8','EqpajbuuID9']
+//Beispiel token: ['538a9f12437ff589708c58457af13256','611c1aae3564875430b2a66b1a809051','5b35716ce1ff524b662dfbb160e293a3']
 $config['srv']['addr'] = 'http://localhost:4040/EduMS/api/index.php';
-$config['auth']['login'] = 'BPMspace';
-$config['auth']['token'] = 'abc';
+$config['auth']['login'] = 'EqpajbuuID9';
+$config['auth']['token'] = '5b35716ce1ff524b662dfbb160e293a3';
 $baseURL = $config['srv']['addr'].'/'.$config['auth']['login'].'/'.$config['auth']['token'];
 
 /*Handle the requested view and define the URL*/
@@ -34,8 +36,11 @@ if(isset($_REQUEST['debug']) && $_REQUEST['debug']==1){
 /*The response is expected as a valid JSON-Array. If not echo the fail.*/
 if(!is_array(json_decode($response, true))){
     echo "<h2>The response is not a valid JSON-Array</h2>";
-    echo "<h3>$response:</h3>";
+    echo "<h3>Response in raw:</h3>";
     echo $response;
+    echo "<h3>Response as var_dump:</h3>";
+    var_dump($response);
+    echo "<h3>-End Of Response</h3>";
     echo "<hr>";
     exit;
 }
@@ -70,7 +75,7 @@ echo <<<EOF
     <div id="inhalt">
       $ct
     </div>
-</div>
+
 </body>
 $script
 $controller 
