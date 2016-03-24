@@ -1,2 +1,5 @@
 # DONT uploas passwords
 config.inc.php
+
+# log by rob
+*.log
