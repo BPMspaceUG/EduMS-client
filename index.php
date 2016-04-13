@@ -76,7 +76,7 @@ echo <<<EOF
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">        
 </head>
 <body>
-    <div id="inhalt">
+    <div id="content">
       $ct
     </div>
 
