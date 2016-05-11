@@ -3,10 +3,10 @@
 /*Define self and location*/
 //Beispiel login: ['BPMspaceID1','BtopgwtID8','EqpajbuuID9']
 //Beispiel token: ['538a9f12437ff589708c58457af13256','611c1aae3564875430b2a66b1a809051','5b35716ce1ff524b662dfbb160e293a3']
-$config['srv']['addr'] = 'http://development.bpmspace.org:4040//EduMS/api/index.php';
-// $config['srv']['addr'] = 'http://localhost:4040//EduMS/api/index.php';
-$config['auth']['login'] = 'BtopgwtID8';
-$config['auth']['token'] = '611c1aae3564875430b2a66b1a809051';
+// $config['srv']['addr'] = 'http://development.bpmspace.org:4040//EduMS/api/index.php';
+$config['srv']['addr'] = 'http://dev.bpmspace.org:4040/~cedric/EduMS/api/index.php';
+$config['auth']['login'] = 'EqpajbuuID9';
+$config['auth']['token'] = '5b35716ce1ff524b662dfbb160e293a3';
 $baseURL = $config['srv']['addr'].'/'.$config['auth']['login'].'/'.$config['auth']['token'];
 
 /*Handle the requested view and define the URL*/
@@ -15,16 +15,20 @@ if(array_key_exists('navdest',$_GET)){
     $navigationDestiny = $_GET['navdest'];
     switch ($_GET['navdest']){
         case 'brand': $responseurl = $baseURL.'/brand';
+                /*Fetch the data from the api*/
+                $response = file_get_contents($responseurl);
+                $brandinfo = file_get_contents($baseURL.'/getBrandInfo');
             break;
         case 'monitor': $responseurl = $baseURL.'/monitor';
+            break;
+        case 'reserveform': $responseurl = $baseURL.'/reserveform';
+                $response = file_get_contents($responseurl);
+                $brandinfo = '["'.$config['auth']['login'].'","'.$config['auth']['token'].'"]';
             break;
         default:  $responseurl = $baseURL.'/';
     }
 }
 
-/*Fetch the data from the api*/
-$response = file_get_contents($responseurl);
-$brandinfo = file_get_contents($baseURL.'/getBrandInfo');
 // var_dump($response);
 // var_dump($brandinfo);
 /*To echo out a debuging version of the response, add "&debug=1" to the URL.*/
