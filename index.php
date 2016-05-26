@@ -5,6 +5,7 @@
 //Beispiel token: ['538a9f12437ff589708c58457af13256','611c1aae3564875430b2a66b1a809051','5b35716ce1ff524b662dfbb160e293a3']
 // $config['srv']['addr'] = 'http://development.bpmspace.org:4040//EduMS/api/index.php';
 $config['srv']['addr'] = 'http://dev.bpmspace.org:4040/~cedric/EduMS/api/index.php';
+// $config['srv']['reserve'] = 'http://dev.bpmspace.org:4040/~cedric/EduMS/api/reservemail.php';
 $config['auth']['login'] = 'EqpajbuuID9';
 $config['auth']['token'] = '5b35716ce1ff524b662dfbb160e293a3';
 $baseURL = $config['srv']['addr'].'/'.$config['auth']['login'].'/'.$config['auth']['token'];
@@ -21,13 +22,35 @@ if(array_key_exists('navdest',$_GET)){
             break;
         case 'monitor': $responseurl = $baseURL.'/monitor';
             break;
-        case 'reserveform': $responseurl = $baseURL.'/reserveform';
-                $response = file_get_contents($responseurl);
-                $brandinfo = '["'.$config['auth']['login'].'","'.$config['auth']['token'].'"]';
-            break;
+        // case 'reserveform': $responseurl = $baseURL.'/reserveform';
+        //     $data = array('brand' => $config['auth']['login'].' '.$config['auth']['token'], 
+        //         'rinfo' => '{a:[1]}');
+
+        //     // use key 'http' even if you send the request to https://...
+        //     $options = array(
+        //         'http' => array(
+        //             'header'  => "Content-type: application/json\r\n",
+        //             'method'  => 'POST',
+        //             'content' => http_build_query($data)
+        //         )
+        //     ); 
+        //     $context  = stream_context_create($options);
+        //     $result = file_get_contents($config['srv']['reserve'], false, $context);
+        //     if ($result === FALSE) { /* Handle error */ }
+
+        //     //var_dump($result);
+        //         // $response = file_get_contents($responseurl);
+        //         // $brandinfo = '["'.$config['auth']['login'].'","'.$config['auth']['token'].'"]';
+        //     break;
         default:  $responseurl = $baseURL.'/';
+            break;
     }
+}else{    
+    $response = file_get_contents($responseurl);
+    $brandinfo = file_get_contents($baseURL.'/getBrandInfo');
 }
+
+
 
 // var_dump($response);
 // var_dump($brandinfo);
