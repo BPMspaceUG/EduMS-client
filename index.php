@@ -5,6 +5,7 @@
 //Beispiel token: ['538a9f12437ff589708c58457af13256','611c1aae3564875430b2a66b1a809051','5b35716ce1ff524b662dfbb160e293a3']
 // $config['srv']['addr'] = 'http://development.bpmspace.org:4040//EduMS/api/index.php';
 $config['srv']['addr'] = 'http://dev.bpmspace.org:4040/~cedric/EduMS/api/index.php';
+$apisvr = $config['srv']['addr'];
 // $config['srv']['reserve'] = 'http://dev.bpmspace.org:4040/~cedric/EduMS/api/reservemail.php';
 $config['auth']['login'] = 'EqpajbuuID9';
 $config['auth']['token'] = '5b35716ce1ff524b662dfbb160e293a3';
@@ -109,10 +110,11 @@ echo <<<EOF
 
 </body>
 $script
-<script>console.log('debug');</script>
-<script>response = $brandinfo</script>
+<script>apisvr=$apisvr;</script>
+<script>response = '$brandinfo';</script>
 $controller 
 <script>console.log(response);</script>
+<script>console.log(apisvr);</script>
 $directive
 </html>
 EOF;
