@@ -110,8 +110,8 @@ echo <<<EOF
 
 </body>
 $script
-<script>apisvr=$apisvr;</script>
-<script>response = '$brandinfo';</script>
+<script>apisvr='$apisvr';</script>
+<script>response = $brandinfo;</script>
 $controller 
 <script>console.log(response);</script>
 <script>console.log(apisvr);</script>
