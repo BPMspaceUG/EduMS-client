@@ -18,8 +18,8 @@ if(array_key_exists('navdest',$_GET)){
     switch ($_GET['navdest']){
         case 'brand': $responseurl = $baseURL.'/brand';
                 /*Fetch the data from the api*/
-                $response = file_get_contents($responseurl);
-                $brandinfo = file_get_contents($baseURL.'/getBrandInfo');
+                $response = file_GET_contents($responseurl);
+                $brandinfo = file_GET_contents($baseURL.'/getBrandInfo');
             break;
         case 'monitor': $responseurl = $baseURL.'/monitor';
             break;
@@ -36,19 +36,24 @@ if(array_key_exists('navdest',$_GET)){
         //         )
         //     ); 
         //     $context  = stream_context_create($options);
-        //     $result = file_get_contents($config['srv']['reserve'], false, $context);
+        //     $result = file_GET_contents($config['srv']['reserve'], false, $context);
         //     if ($result === FALSE) { /* Handle error */ }
 
         //     //var_dump($result);
-        //         // $response = file_get_contents($responseurl);
+        //         // $response = file_GET_contents($responseurl);
         //         // $brandinfo = '["'.$config['auth']['login'].'","'.$config['auth']['token'].'"]';
         //     break;
         default:  $responseurl = $baseURL.'/';
             break;
     }
 }else{    
-    $response = file_get_contents($responseurl);
-    $brandinfo = file_get_contents($baseURL.'/getBrandInfo');
+    $response = file_GET_contents($responseurl);
+    //If a specific Topic is requested, name and send it
+    if ( isset($_GET['topic']) ) { 
+        $brandinfo = file_GET_contents($baseURL.'/getBrandInfo?topic='.urlencode($_GET['topic']));
+    }else{ 
+        $brandinfo = file_GET_contents($baseURL.'/getBrandInfo');
+    }
 }
 
 
@@ -80,11 +85,16 @@ if(!is_array(json_decode($response, true))){
 $response = json_decode($response, true);
 if (is_array($response)) {
     if ($response != "invalidCredentials") {
-        if(array_key_exists('ct',$response)){
+        if(array_key_exists('htmlCore',$response)){
+            if (strpos($response['htmlCore'][0]["html_core"], 'div')) {
+                $ct = $response['htmlCore'][0]["html_core"]; $script = $response['script']; $controller = $response['controller']; $css = $response['css']; $directive = $response['directive'];
+            }elseif(array_key_exists('ct',$response)){
+                // echo strpos($response['ct'], 'div');
+                $ct = $response['ct']; $script = $response['script']; $controller = $response['controller']; $css = $response['css']; $directive = $response['directive'];
+            }
+        }elseif(array_key_exists('ct',$response)){
             $ct = $response['ct']; $script = $response['script']; $controller = $response['controller']; $css = $response['css']; $directive = $response['directive'];
         // var_dump($response);
-        }else{
-            $ct = 'no content'; $script = ''; $controller = ''; $css = ''; $directive = '';
         }
     }
     else{
@@ -101,17 +111,18 @@ echo <<<EOF
 <html lang="de" ng-app='application'>
 <head>
     $css
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">        
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">    
+    <meta name="viewport" content="width=device-width, initial-scale=1">    
 </head>
 <body>
-    <div id="content">
+    <div id="content" ng-controller="navCtrl">
       $ct
     </div>
 
 </body>
 $script
-<script>apisvr=$apisvr;</script>
-<script>response = '$brandinfo';</script>
+<script>apisvr='$apisvr';</script>
+<script>response = $brandinfo;</script>
 $controller 
 <script>console.log(response);</script>
 <script>console.log(apisvr);</script>
