@@ -49,11 +49,7 @@ if(array_key_exists('navdest',$_GET)){
 }else{    
     $response = file_GET_contents($responseurl);
     //If a specific Topic is requested, name and send it
-    if ( isset($_GET['topic']) ) { 
-        $brandinfo = file_GET_contents($baseURL.'/getBrandInfo?topic='.urlencode($_GET['topic']));
-    }else{ 
-        $brandinfo = file_GET_contents($baseURL.'/getBrandInfo');
-    }
+    $brandinfo = file_GET_contents($baseURL.'/getBrandInfo?'.http_build_query($_GET));
 }
 
 
@@ -83,17 +79,19 @@ if(!is_array(json_decode($response, true))){
 
 /*If the authentification on the server was successfull, seperate the valid $response*/ 
 $response = json_decode($response, true);
+$brandinfoDecoded = json_decode($brandinfo, true);
 if (is_array($response)) {
     if ($response != "invalidCredentials") {
         if(array_key_exists('htmlCore',$response)){
             if (strpos($response['htmlCore'][0]["html_core"], 'div')) {
-                $ct = $response['htmlCore'][0]["html_core"]; $script = $response['script']; $controller = $response['controller']; $css = $response['css']; $directive = $response['directive'];
+                $ct = $response['htmlCore'][0]["html_core"]; $script = $response['script']; $controller = $response['controller']; $css = $response['css']; $directive = $response['directive']; 
+                $meta=$brandinfoDecoded['meta'];
             }elseif(array_key_exists('ct',$response)){
                 // echo strpos($response['ct'], 'div');
-                $ct = $response['ct']; $script = $response['script']; $controller = $response['controller']; $css = $response['css']; $directive = $response['directive'];
+                $ct = $response['ct']; $script = $response['script']; $controller = $response['controller']; $css = $response['css']; $directive = $response['directive']; $meta=$brandinfo['meta'];
             }
         }elseif(array_key_exists('ct',$response)){
-            $ct = $response['ct']; $script = $response['script']; $controller = $response['controller']; $css = $response['css']; $directive = $response['directive'];
+            $ct = $response['ct']; $script = $response['script']; $controller = $response['controller']; $css = $response['css']; $directive = $response['directive']; $meta=$brandinfo['meta'];
         // var_dump($response);
         }
     }
@@ -110,15 +108,15 @@ echo <<<EOF
 <!DOCTYPE html>
 <html lang="de" ng-app='application'>
 <head>
+    $meta
     $css
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">    
-    <meta name="viewport" content="width=device-width, initial-scale=1">    
+    <meta name="viewport" content="width=device-width, initial-scale=1">   
 </head>
 <body>
     <div id="content" ng-controller="navCtrl">
       $ct
     </div>
-
 </body>
 $script
 <script>apisvr='$apisvr';</script>
