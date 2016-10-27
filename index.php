@@ -88,10 +88,10 @@ if (is_array($response)) {
                 $meta=$brandinfoDecoded['meta'];
             }elseif(array_key_exists('ct',$response)){
                 // echo strpos($response['ct'], 'div');
-                $ct = $response['ct']; $script = $response['script']; $controller = $response['controller']; $css = $response['css']; $directive = $response['directive']; $meta=$brandinfo['meta'];
+                $ct = $response['ct']; $script = $response['script']; $controller = $response['controller']; $css = $response['css']; $directive = $response['directive']; $meta=$brandinfoDecoded['meta'];
             }
         }elseif(array_key_exists('ct',$response)){
-            $ct = $response['ct']; $script = $response['script']; $controller = $response['controller']; $css = $response['css']; $directive = $response['directive']; $meta=$brandinfo['meta'];
+            $ct = $response['ct']; $script = $response['script']; $controller = $response['controller']; $css = $response['css']; $directive = $response['directive']; $meta=$brandinfoDecoded['meta'];
         // var_dump($response);
         }
     }
